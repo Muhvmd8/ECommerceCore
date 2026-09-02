@@ -1,4 +1,6 @@
-﻿namespace ECommerce.API;
+﻿using ECommerce.API.Middlewares;
+
+namespace ECommerce.API;
 
 public static class DependencyInjection
 {
@@ -7,6 +9,9 @@ public static class DependencyInjection
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services.AddProblemDetails();
+        services.AddScoped<GlobalExceptionMiddleware>();
 
         return services;
     }

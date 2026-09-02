@@ -1,9 +1,12 @@
 using ECommerce.Infrastructure;
+using ECommerce.Infrastructure.Persistence.DbContexts;
+using ECommerce.Infrastructure.Persistence.Seeding;
 using ECommerce.UseCases;
+using Microsoft.EntityFrameworkCore;
 namespace ECommerce.API;
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +18,24 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        #region Configure the HTTP request pipeline.
+        app.UseExceptionHandler();
+
+        #region Data Seeding
+        if (app.Environment.IsDevelopment())
+        {
+            await using var scope = app.Services.CreateAsyncScope();
+            var dbContext = scope.ServiceProvider
+                .GetRequiredService<ApplicationDbContext>();
+
+            var dbSeeder = scope.ServiceProvider
+                .GetRequiredService<DatabaseSeeder>();
+
+            await dbContext.Database.MigrateAsync();
+            await dbSeeder.SeedAsync();
+        }
+        #endregion
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -28,6 +48,7 @@ public class Program
 
 
         app.MapControllers();
+        #endregion
 
         app.Run();
     }

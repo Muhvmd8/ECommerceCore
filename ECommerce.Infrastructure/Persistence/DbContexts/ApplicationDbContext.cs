@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ECommerce.Infrastructure.Data.DbContexts;
+namespace ECommerce.Infrastructure.Persistence.DbContexts;
 
 public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
 {

@@ -7,6 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Persistence\Seeding\Data\brands.json" />
+    <None Remove="Persistence\Seeding\Data\types.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<EmbeddedResource Include="Persistence\Seeding\Data\brands.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Seeding\Data\types.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.30">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,11 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ECommerce.UseCases\ECommerce.UseCases.csproj" />
+    <Page Include="Persistence\Seeding\Data\brands.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
+    <ProjectReference Include="..\ECommerce.UseCases\ECommerce.UseCases.csproj" />
   </ItemGroup>
 
 </Project>

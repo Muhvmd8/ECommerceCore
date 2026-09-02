@@ -1,6 +1,6 @@
 using ECommerce.Domain.Entities.Common;
 using ECommerce.Domain.Interfaces;
-using ECommerce.Infrastructure.Data.DbContexts;
+using ECommerce.Infrastructure.Persistence.DbContexts;
 
 namespace ECommerce.Infrastructure.Repositories
 {
@@ -22,9 +22,9 @@ namespace ECommerce.Infrastructure.Repositories
             return repo;
         }
 
-        public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
-        public async Task BeginTransactionAsync() => await _context.Database.BeginTransactionAsync();
-        public async Task CommitTransactionAsync() => await _context.Database.CommitTransactionAsync();
-        public async Task RollbackTransactionAsync() => await _context.Database.RollbackTransactionAsync();
+        public async Task<int> SaveChangesAsync(CancellationToken ct = default) => await _context.SaveChangesAsync(ct);
+        public async Task BeginTransactionAsync(CancellationToken ct = default) => await _context.Database.BeginTransactionAsync(ct);
+        public async Task CommitTransactionAsync(CancellationToken ct = default) => await _context.Database.CommitTransactionAsync(ct);
+        public async Task RollbackTransactionAsync(CancellationToken ct = default) => await _context.Database.RollbackTransactionAsync(ct);
     }
 }
