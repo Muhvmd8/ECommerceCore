@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 namespace ECommerce.API.Controllers;
-[Route("api/[controller]")]
 [ApiController]
-internal abstract class ApiController : ControllerBase
+[Route("api/[controller]")]
+// automatic model validation
+// detect data from (form, query, route, etc)
+// when the problem is detected, it will return a object of problem details by default.
+public abstract class ApiController : ControllerBase
 {
     [Authorize]
     protected string _GetIdFromToken() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
