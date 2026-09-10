@@ -8,7 +8,7 @@ public static class DependencyInjection
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(); // generate openapi file
 
         services.AddProblemDetails();
         services.AddScoped<GlobalExceptionMiddleware>();

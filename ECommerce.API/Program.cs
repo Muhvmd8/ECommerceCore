@@ -38,7 +38,7 @@ public class Program
 
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
+            app.UseSwagger(); // run middleware that makes documentation file available to use.
             app.UseSwaggerUI();
         }
 
