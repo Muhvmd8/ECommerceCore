@@ -1,12 +1,12 @@
 ﻿using ECommerce.Domain.Interfaces;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Persistence.Interceptors;
-using ECommerce.Infrastructure.Persistence.Queries;
 using ECommerce.Infrastructure.Persistence.Seeding;
 using ECommerce.Infrastructure.Persistence.Seeding.Abstraction;
 using ECommerce.Infrastructure.Persistence.Seeding.Implementation;
+using ECommerce.Infrastructure.QueryServices;
 using ECommerce.Infrastructure.Repositories;
-using ECommerce.UseCases.Products;
+using ECommerce.UseCases.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

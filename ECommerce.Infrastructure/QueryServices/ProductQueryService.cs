@@ -1,10 +1,10 @@
 ﻿using ECommerce.Domain.Entities.ProductModule;
 using ECommerce.Domain.Interfaces;
-using ECommerce.UseCases.Products;
+using ECommerce.UseCases.Abstractions;
 using ECommerce.UseCases.Products.DTOs;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-namespace ECommerce.Infrastructure.Persistence.Queries;
+namespace ECommerce.Infrastructure.QueryServices;
 public class ProductQueryService(IUnitOfWork unitOfWork) : IProductQueryService
 {
 

@@ -1,5 +1,5 @@
 ﻿using ECommerce.UseCases.Products.DTOs;
-namespace ECommerce.UseCases.Products;
+namespace ECommerce.UseCases.Abstractions;
 public interface IProductQueryService
 {
     Task<IReadOnlyList<GetAllProductResponse>> GetAllProductsAsync(CancellationToken ct = default);

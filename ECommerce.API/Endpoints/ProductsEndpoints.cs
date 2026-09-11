@@ -1,4 +1,5 @@
-﻿using ECommerce.UseCases.Products;
+﻿using ECommerce.UseCases.Abstractions;
+
 namespace ECommerce.API.Endpoints;
 public static class ProductsEndpoints
 {
