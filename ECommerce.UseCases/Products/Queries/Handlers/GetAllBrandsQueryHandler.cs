@@ -1,11 +1,13 @@
 ﻿using ECommerce.Domain.Common;
-using ECommerce.UseCases.Abstractions;
+using ECommerce.Domain.Entities.ProductModule;
+using ECommerce.Domain.Interfaces;
 using ECommerce.UseCases.Products.DTOs;
+using ECommerce.UseCases.Specifications.Specifications.Brands;
 using MediatR;
 
-namespace ECommerce.UseCases.Products.Queries.GetAllBrands;
+namespace ECommerce.UseCases.Products.Queries.Handlers;
 public sealed class GetAllBrandsQueryHandler(
-    IProductQueryService productQueryService)
+    IReadRepository<ProductBrand> repository)
     : IRequestHandler<
         GetAllBrandsQuery,
         Result<IReadOnlyList<GetAllBrandsResponse>>>
@@ -14,8 +16,7 @@ public sealed class GetAllBrandsQueryHandler(
         GetAllBrandsQuery request,
         CancellationToken cancellationToken)
     {
-        var brands = await productQueryService
-            .GetAllBrandsAsync(cancellationToken);
+        var brands = await repository.ListAsync(new GetAllProductBrandSpecification(), cancellationToken);
 
         return Result<IReadOnlyList<GetAllBrandsResponse>>
             .Success(brands);

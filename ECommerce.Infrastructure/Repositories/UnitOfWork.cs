@@ -1,5 +1,6 @@
 using ECommerce.Domain.Entities.Common;
 using ECommerce.Domain.Interfaces;
+using ECommerce.Domain.Interfaces.Repositories;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Persistence.Interceptors;
 using System.Collections.Concurrent;
@@ -10,15 +11,15 @@ public class UnitOfWork(ApplicationDbContext _context,
     : IUnitOfWork
 {
     private readonly ConcurrentDictionary<string/*typeName*/, object/*Repo*/> _repositories = [];
-    public IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>()
-        where TEntity : BaseEntity<TKey>
+    public IRepository<TEntity> GetRepository<TEntity>()
+        where TEntity : BaseEntity
     {
         var typeName = typeof(TEntity).Name;
         // Get repo from the container
         if (_repositories.ContainsKey(typeName))
-            return (IGenericRepository<TEntity, TKey>)_repositories[typeName];
+            return (IRepository<TEntity>)_repositories[typeName];
 
-        var repo = new GenericRepository<TEntity, TKey>(_context);
+        var repo = new Repository<TEntity>(_context);
         _repositories[typeName] = repo;
         return repo;
     }

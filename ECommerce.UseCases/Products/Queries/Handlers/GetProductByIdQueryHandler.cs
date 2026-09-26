@@ -3,7 +3,7 @@ using ECommerce.Domain.Common.Errors;
 using ECommerce.UseCases.Abstractions;
 using ECommerce.UseCases.Products.DTOs;
 using MediatR;
-namespace ECommerce.UseCases.Products.Queries.GetProductById;
+namespace ECommerce.UseCases.Products.Queries.Handlers;
 internal class GetProductByIdQueryHandler(IProductQueryService productQueryService) :
     IRequestHandler<GetProductByIdQuery, Result<GetProductByIdResponse>>
 {

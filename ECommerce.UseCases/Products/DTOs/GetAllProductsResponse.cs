@@ -1,5 +1,5 @@
 ﻿namespace ECommerce.UseCases.Products.DTOs;
-public class GetAllProductResponse
+public class GetAllProductsResponse
 {
     public int Id { get; set; }
     public string Name { get; set; } = default!;
@@ -7,4 +7,5 @@ public class GetAllProductResponse
     public decimal Price { get; set; }
     public string BrandName { get; set; } = default!;
     public string TypeName { get; set; } = default!;
+    public string PictureUrl { get; set; } = default!;
 }

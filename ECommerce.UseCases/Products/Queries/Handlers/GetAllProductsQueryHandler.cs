@@ -2,16 +2,16 @@
 using ECommerce.UseCases.Abstractions;
 using ECommerce.UseCases.Products.DTOs;
 using MediatR;
-namespace ECommerce.UseCases.Products.Queries.GetAllProducts;
+namespace ECommerce.UseCases.Products.Queries.Handlers;
 public sealed class GetAllProductsQueryHandler(IProductQueryService productQueryService)
     : IRequestHandler<
         GetAllProductsQuery,
-        Result<IReadOnlyList<GetAllProductResponse>>>
+        Result<IReadOnlyList<GetAllProductsResponse>>>
 {
-    public async Task<Result<IReadOnlyList<GetAllProductResponse>>> Handle(GetAllProductsQuery request,
+    public async Task<Result<IReadOnlyList<GetAllProductsResponse>>> Handle(GetAllProductsQuery request,
         CancellationToken cancellationToken)
     {
         var products = await productQueryService.GetAllProductsAsync(cancellationToken);
-        return Result<IReadOnlyList<GetAllProductResponse>>.Success(products);
+        return Result<IReadOnlyList<GetAllProductsResponse>>.Success(products);
     }
 }

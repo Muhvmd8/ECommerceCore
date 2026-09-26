@@ -1,4 +1,5 @@
 ﻿using ECommerce.Domain.Interfaces;
+using ECommerce.Domain.Interfaces.Repositories;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Persistence.Interceptors;
 using ECommerce.Infrastructure.Persistence.Seeding;
@@ -15,7 +16,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-
+        services.AddScoped(typeof(IReadRepository<>), typeof(Repository<>));
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddDbContext<ApplicationDbContext>(options =>

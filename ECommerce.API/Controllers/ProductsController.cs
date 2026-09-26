@@ -1,9 +1,7 @@
 ﻿using ECommerce.API.Models;
 using ECommerce.UseCases.Products.DTOs;
-using ECommerce.UseCases.Products.Queries.GetAllBrands;
-using ECommerce.UseCases.Products.Queries.GetAllProducts;
-using ECommerce.UseCases.Products.Queries.GetAllTypes;
-using ECommerce.UseCases.Products.Queries.GetProductById;
+using ECommerce.UseCases.Products.Queries;
+using ECommerce.UseCases.Products.Queries.Handlers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 namespace ECommerce.API.Controllers;
@@ -11,11 +9,21 @@ public class ProductsController(IMediator mediator) : ApiController
 {
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<IReadOnlyList<GetAllProductResponse>>>> GetAllProducts(CancellationToken ct = default)
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<GetAllProductsResponse>>>> GetAllProducts(CancellationToken ct = default)
     {
         var result = await mediator.Send(new GetAllProductsQuery(), ct);
         return FromResult(result);
     }
+
+    [HttpGet("paged")]
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<GetAllProductsResponse>>>> GetAllProducts(
+        [FromQuery] GetAllPaginatedProductsQuery query,
+        CancellationToken ct = default)
+    {
+        var result = await mediator.Send(query, ct);
+        return FromPagedResult(result, query.PageNumber, query.PageSize, "ProductsRetrievedSuccessfully");
+    }
+
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ApiResponse<GetProductByIdResponse>), StatusCodes.Status200OK)]

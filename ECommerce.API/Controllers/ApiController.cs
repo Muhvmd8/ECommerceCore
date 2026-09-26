@@ -69,11 +69,26 @@ public abstract class ApiController : ControllerBase
         };
     }
 
-    protected ActionResult<ApiResponse<T>> FromResult<T>(Result<T> result, string? message = null,
-        PaginationMeta? pagination = null)
+    protected ActionResult<ApiResponse<T>> FromResult<T>(Result<T> result, string? message = null)
     {
         if (result.IsSuccess)
-            return Success(result.Value, message, pagination);
+            return Success(result.Value, message);
+
         return Problem(result);
     }
+
+    protected ActionResult<ApiResponse<IReadOnlyList<T>>> FromPagedResult<T>(
+        Result<PagedResult<T>> result,
+        int pageNumber,
+        int pageSize,
+        string successMessage)
+    {
+        if (result.IsFailure)
+            return Problem(result);
+        else
+            return Success(result.Value.Items, successMessage, new PaginationMeta(pageNumber, pageSize, result.Value.TotalCount));
+    }
+
+
+
 }

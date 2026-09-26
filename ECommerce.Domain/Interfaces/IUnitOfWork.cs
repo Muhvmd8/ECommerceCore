@@ -9,7 +9,7 @@ namespace ECommerce.Domain.Interfaces
         Task CommitTransactionAsync(CancellationToken ct = default);
         Task RollbackTransactionAsync(CancellationToken ct = default);
 
-        IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>()
-            where TEntity : BaseEntity<TKey>;
+        IRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : BaseEntity;
     }
 }

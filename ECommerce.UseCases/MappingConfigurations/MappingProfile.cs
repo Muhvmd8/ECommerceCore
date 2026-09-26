@@ -7,7 +7,7 @@ public class MappingProfile : IRegister
     public void Register(TypeAdapterConfig config)
     {
         #region Product Mapping
-        config.NewConfig<Product, GetAllProductResponse>()
+        config.NewConfig<Product, GetAllProductsResponse>()
             .Map(dest => dest.BrandName, src => src.ProductBrand.Name)
             .Map(dest => dest.TypeName, src => src.ProductType.Name);
 
