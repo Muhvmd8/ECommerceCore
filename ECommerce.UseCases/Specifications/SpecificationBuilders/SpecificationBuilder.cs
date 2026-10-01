@@ -1,5 +1,5 @@
 ﻿using ECommerce.Domain.Entities.Common;
-using ECommerce.Domain.Interfaces.Specifications;
+using ECommerce.Domain.Specifications;
 using ECommerce.UseCases.Specifications.SpecificationBuilders.Include;
 using ECommerce.UseCases.Specifications.SpecificationBuilders.Order;
 using System.Linq.Expressions;

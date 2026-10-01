@@ -1,4 +1,4 @@
-﻿using ECommerce.Domain.Common;
+﻿using ECommerce.Domain.Shared;
 using ECommerce.UseCases.Abstractions;
 using ECommerce.UseCases.Products.DTOs;
 using MediatR;

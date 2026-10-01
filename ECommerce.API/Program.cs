@@ -14,12 +14,23 @@ public class Program
         builder.Services.AddApiServices();
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddApplicationServices();
+
+        builder.Services.AddOutputCache(options =>
+        {
+            options.AddPolicy("Products", policy =>
+            {
+                policy.Expire(TimeSpan.FromMinutes(1))
+                    .SetVaryByQuery("PageNumber", "PageSize");
+            });
+        });
         #endregion
 
         var app = builder.Build();
 
         #region Configure the HTTP request pipeline.
         app.UseExceptionHandler();
+
+        app.UseOutputCache();
 
         #region Data Seeding
         if (app.Environment.IsDevelopment())

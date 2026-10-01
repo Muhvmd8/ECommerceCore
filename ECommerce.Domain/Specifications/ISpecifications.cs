@@ -1,7 +1,7 @@
 ﻿using ECommerce.Domain.Entities.Common;
 using System.Linq.Expressions;
 
-namespace ECommerce.Domain.Interfaces.Specifications;
+namespace ECommerce.Domain.Specifications;
 public interface ISpecifications<TEntity>
     where TEntity : BaseEntity
 {

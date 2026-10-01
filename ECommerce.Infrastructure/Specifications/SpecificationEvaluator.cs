@@ -1,5 +1,5 @@
 ﻿using ECommerce.Domain.Entities.Common;
-using ECommerce.Domain.Interfaces.Specifications;
+using ECommerce.Domain.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 namespace ECommerce.Infrastructure.Specifications;

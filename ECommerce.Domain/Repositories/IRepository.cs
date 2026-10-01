@@ -1,5 +1,5 @@
 ﻿using ECommerce.Domain.Entities.Common;
-namespace ECommerce.Domain.Interfaces;
+namespace ECommerce.Domain.Repositories;
 
 public interface IRepository<TEntity>
     : IReadRepository<TEntity> where TEntity : BaseEntity

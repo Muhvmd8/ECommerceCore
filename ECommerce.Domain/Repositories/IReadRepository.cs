@@ -1,7 +1,7 @@
-using ECommerce.Domain.Common;
 using ECommerce.Domain.Entities.Common;
-using ECommerce.Domain.Interfaces.Specifications;
-namespace ECommerce.Domain.Interfaces;
+using ECommerce.Domain.Shared;
+using ECommerce.Domain.Specifications;
+namespace ECommerce.Domain.Repositories;
 public interface IReadRepository<TEntity>
     where TEntity : BaseEntity
 {

@@ -1,5 +1,5 @@
 ﻿using ECommerce.Domain.Entities.Common;
-using ECommerce.Domain.Interfaces.Specifications;
+using ECommerce.Domain.Specifications;
 using ECommerce.UseCases.Specifications.SpecificationBuilders;
 using System.Linq.Expressions;
 
@@ -73,7 +73,7 @@ public abstract class Specification<TEntity>
         _orderExpressions.Add(
             new OrderExpressionInfo<TEntity>
             {
-                KeySelector = orderBy,
+                KeySelector = orderBy!,
                 OrderType = orderType
             });
     }

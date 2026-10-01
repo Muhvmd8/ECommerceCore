@@ -1,6 +1,6 @@
-﻿using ECommerce.Domain.Common;
-using ECommerce.Domain.Entities.ProductModule;
-using ECommerce.Domain.Interfaces;
+﻿using ECommerce.Domain.Entities.ProductModule;
+using ECommerce.Domain.Repositories;
+using ECommerce.Domain.Shared;
 using ECommerce.UseCases.Products.DTOs;
 using ECommerce.UseCases.Specifications.Specifications.Types;
 using MediatR;

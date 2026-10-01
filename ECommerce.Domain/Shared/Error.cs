@@ -1,4 +1,4 @@
-﻿namespace ECommerce.Domain.Common;
+﻿namespace ECommerce.Domain.Shared;
 public sealed record Error(string Code, string Message, ErrorType ErrorType)
 {
     public static Error Validation(string code, string message) =>

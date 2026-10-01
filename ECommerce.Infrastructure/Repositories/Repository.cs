@@ -1,6 +1,7 @@
-using ECommerce.Domain.Common;
 using ECommerce.Domain.Entities.Common;
-using ECommerce.Domain.Interfaces.Specifications;
+using ECommerce.Domain.Repositories;
+using ECommerce.Domain.Shared;
+using ECommerce.Domain.Specifications;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;

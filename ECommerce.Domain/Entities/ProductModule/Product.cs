@@ -1,6 +1,6 @@
-﻿using ECommerce.Domain.Common;
-using ECommerce.Domain.Common.Errors;
-using ECommerce.Domain.Entities.Common;
+﻿using ECommerce.Domain.Entities.Common;
+using ECommerce.Domain.Errors;
+using ECommerce.Domain.Shared;
 
 namespace ECommerce.Domain.Entities.ProductModule;
 

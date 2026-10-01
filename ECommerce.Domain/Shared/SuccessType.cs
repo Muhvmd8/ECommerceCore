@@ -1,4 +1,4 @@
-﻿namespace ECommerce.Domain.Common;
+﻿namespace ECommerce.Domain.Shared;
 
 public enum SuccessType
 {

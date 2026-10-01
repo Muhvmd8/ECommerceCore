@@ -1,4 +1,7 @@
-﻿namespace ECommerce.Domain.Common.Errors;
+﻿using ECommerce.Domain.Consts;
+using ECommerce.Domain.Shared;
+
+namespace ECommerce.Domain.Errors;
 public static class ProductErrors
 {
     public static readonly Error NameRequired =
@@ -50,4 +53,14 @@ public static class ProductErrors
         Error.NotFound(
             "Product.NotFound",
             "The product was not found.");
+
+    public static readonly Error InvalidQuantityIncrement =
+        Error.Validation(
+            "BasketItem.InvalidQuantityIncrement",
+            $"Quantity cannot exceed {BasketItemConsts.MaxQuantity}.");
+
+    public static readonly Error QuantityTooHigh =
+        Error.Validation(
+            "BasketItem.QuantityTooHigh",
+            $"Quantity cannot exceed {BasketItemConsts.MaxQuantity}.");
 }

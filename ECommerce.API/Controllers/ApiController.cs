@@ -1,5 +1,5 @@
 ﻿using ECommerce.API.Models;
-using ECommerce.Domain.Common;
+using ECommerce.Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

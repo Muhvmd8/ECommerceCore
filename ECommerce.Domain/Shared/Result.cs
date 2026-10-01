@@ -1,4 +1,4 @@
-﻿namespace ECommerce.Domain.Common;
+﻿namespace ECommerce.Domain.Shared;
 public class Result
 {
     protected Result(bool isSuccess, Error? error, SuccessType? successType)
@@ -18,9 +18,9 @@ public class Result
     public Error? Error { get; }
     public bool IsFailure => !IsSuccess;
     public SuccessType? SuccessType { get; }
-    public static Result Success() => new(true, null, Common.SuccessType.Ok);
+    public static Result Success() => new(true, null, Shared.SuccessType.Ok);
 
-    public static Result Failure(Error error) => new(false, error, Common.SuccessType.No);
+    public static Result Failure(Error error) => new(false, error, Shared.SuccessType.No);
 }
 
 public sealed class Result<TValue> : Result
@@ -31,8 +31,8 @@ public sealed class Result<TValue> : Result
 
     public TValue Value => IsSuccess ? _value! :
         throw new InvalidOperationException("Cannot access the value of a failed result.");
-    public static Result<TValue> Success(TValue value) => new(true, value, null, Common.SuccessType.Ok);
-    public new static Result<TValue> Failure(Error error) => new(false, default, error, Common.SuccessType.No);
+    public static Result<TValue> Success(TValue value) => new(true, value, null, Shared.SuccessType.Ok);
+    public new static Result<TValue> Failure(Error error) => new(false, default, error, Shared.SuccessType.No);
 
     public TResult Match<TResult>(Func<TValue, TResult> onSuccess, Func<Error, TResult> onFailure)
     {

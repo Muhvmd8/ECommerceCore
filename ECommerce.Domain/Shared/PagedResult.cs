@@ -1,4 +1,4 @@
-﻿namespace ECommerce.Domain.Common;
+﻿namespace ECommerce.Domain.Shared;
 public class PagedResult<T>
 {
     public PagedResult(IReadOnlyList<T> items, int totalCount)
