@@ -1,4 +1,5 @@
-﻿using ECommerce.API.Models;
+﻿using ECommerce.API.Factories;
+using ECommerce.API.Models;
 using ECommerce.Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,59 +18,30 @@ public abstract class ApiController : ControllerBase
     [Authorize]
     protected string _GetEmailFromToken() => User.FindFirst(ClaimTypes.Name)?.Value!;
 
-    protected ActionResult<ApiResponse<T>> Success<T>(T data,
-        string? message = null, PaginationMeta? pagination = null)
+    protected ActionResult<ApiResponse<T>> Success<T>(
+    T data,
+    string? message = null,
+    PaginationMeta? pagination = null)
     {
-        var response = ApiResponse<T>.Ok(data, HttpContext.TraceIdentifier, message, pagination);
+        var response = ApiResponseFactory.Success(
+            data,
+            HttpContext.TraceIdentifier,
+            message,
+            pagination);
+
         return Ok(response);
     }
 
     protected ActionResult Problem(Result result)
     {
-        var statusCode = result?.Error?.ErrorType switch
-        {
-            ErrorType.Validation => StatusCodes.Status400BadRequest,
-            ErrorType.NotFound => StatusCodes.Status404NotFound,
-            ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
-            ErrorType.Conflict => StatusCodes.Status409Conflict,
-            ErrorType.Forbidden => StatusCodes.Status403Forbidden,
-            _ => StatusCodes.Status500InternalServerError
-        };
-
-        var title = result?.Error?.ErrorType switch
-        {
-            ErrorType.Validation => "Validation Error",
-            ErrorType.NotFound => "Not Found",
-            ErrorType.Unauthorized => "Unauthorized",
-            ErrorType.Forbidden => "Forbidden",
-            ErrorType.Conflict => "Conflict",
-            _ => "Internal Server Error"
-        };
-
-        var problem = new Dictionary<string, object?>()
-        {
-            ["type"] = $"https://httpstatuses.com/{result?.Error?.Code}",
-            ["title"] = title,
-            ["status"] = statusCode
-        };
-
-        if (result?.Error?.ErrorType is ErrorType.Validation)
-            problem["errors"] = new Dictionary<string, string[]>
-            {
-                [result.Error.Code] = [result.Error.Message]
-            };
-        else
-            problem["detail"] = result?.Error?.Message;
-
-        problem["traceId"] = HttpContext.TraceIdentifier;
-
-        return new ObjectResult(problem)
-        {
-            StatusCode = statusCode
-        };
+        return ApiResponseFactory.Problem(
+            result,
+            HttpContext.TraceIdentifier);
     }
 
-    protected ActionResult<ApiResponse<T>> FromResult<T>(Result<T> result, string? message = null)
+    protected ActionResult<ApiResponse<T>> FromResult<T>(
+        Result<T> result,
+        string? message = null)
     {
         if (result.IsSuccess)
             return Success(result.Value, message);
@@ -85,10 +57,13 @@ public abstract class ApiController : ControllerBase
     {
         if (result.IsFailure)
             return Problem(result);
-        else
-            return Success(result.Value.Items, successMessage, new PaginationMeta(pageNumber, pageSize, result.Value.TotalCount));
+
+        return Success(
+            result.Value.Items,
+            successMessage,
+            new PaginationMeta(
+                pageNumber,
+                pageSize,
+                result.Value.TotalCount));
     }
-
-
-
 }

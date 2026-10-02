@@ -1,4 +1,5 @@
-﻿using ECommerce.API.Controllers.Extensions;
+﻿using ECommerce.API.Attributes;
+using ECommerce.API.Controllers.Extensions;
 using ECommerce.API.Models;
 using ECommerce.UseCases.Baskets.Commands;
 using ECommerce.UseCases.Baskets.DTOs;
@@ -9,21 +10,19 @@ namespace ECommerce.API.Controllers
 {
     public class BasketsController(IMediator mediator) : ApiController
     {
-
         [HttpGet]
+        [RequireBuyerId]
         [ProducesResponseType(typeof(ApiResponse<GetBasketResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<GetBasketResponse>>> Get(CancellationToken cancellationToken = default)
         {
-            var buyerIdResult = this.GetBuyerId();
-            if (buyerIdResult.IsFailure)
-                return Problem(buyerIdResult);
-
+            var buyerIdResult = HttpContext.GetBuyerId();
             var result = await mediator.Send(new GetBasketQuery(buyerIdResult.Value), cancellationToken);
             return FromResult(result, "Basket Retrieved Successfully");
         }
 
         [HttpPost("items")]
+        [RequireBuyerId]
         [ProducesResponseType(typeof(ApiResponse<GetBasketResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -31,10 +30,7 @@ namespace ECommerce.API.Controllers
             AddBasketItemCommand request,
             CancellationToken cancellationToken = default)
         {
-            var buyerIdResult = this.GetBuyerId();
-            if (buyerIdResult.IsFailure)
-                return Problem(buyerIdResult);
-
+            var buyerIdResult = HttpContext.GetBuyerId();
             var command = new AddBasketItemCommand(buyerIdResult.Value, request.ProductId, request.Quantity);
             var result = await mediator.Send(command, cancellationToken);
 
@@ -42,6 +38,7 @@ namespace ECommerce.API.Controllers
         }
 
         [HttpPut("items/{productId:int}")]
+        [RequireBuyerId]
         [ProducesResponseType(typeof(ApiResponse<GetBasketResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -50,10 +47,7 @@ namespace ECommerce.API.Controllers
             int quantity,
             CancellationToken cancellationToken = default)
         {
-            var buyerIdResult = this.GetBuyerId();
-            if (buyerIdResult.IsFailure)
-                return Problem(buyerIdResult);
-
+            var buyerIdResult = HttpContext.GetBuyerId();
             var command = new UpdateBasketItemQuantityCommand(buyerIdResult.Value, productId, quantity);
             var result = await mediator.Send(command, cancellationToken);
 
@@ -61,6 +55,7 @@ namespace ECommerce.API.Controllers
         }
 
         [HttpDelete("items/{productId:int}")]
+        [RequireBuyerId]
         [ProducesResponseType(typeof(ApiResponse<GetBasketResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -68,10 +63,7 @@ namespace ECommerce.API.Controllers
             int productId,
             CancellationToken cancellationToken = default)
         {
-            var buyerIdResult = this.GetBuyerId();
-            if (buyerIdResult.IsFailure)
-                return Problem(buyerIdResult);
-
+            var buyerIdResult = HttpContext.GetBuyerId();
             var command = new RemoveBasketItemCommand(buyerIdResult.Value, productId);
             var result = await mediator.Send(command, cancellationToken);
 
@@ -79,6 +71,7 @@ namespace ECommerce.API.Controllers
         }
 
         [HttpPost("merge")]
+        [RequireBuyerId]
         [ProducesResponseType(typeof(ApiResponse<GetBasketResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -86,10 +79,7 @@ namespace ECommerce.API.Controllers
             Guid anonymousBuyerId,
             CancellationToken cancellationToken = default)
         {
-            var buyerIdResult = this.GetBuyerId();
-            if (buyerIdResult.IsFailure)
-                return Problem(buyerIdResult);
-
+            var buyerIdResult = HttpContext.GetBuyerId();
             var command = new MergeBasketCommand(buyerIdResult.Value, anonymousBuyerId);
             var result = await mediator.Send(command, cancellationToken);
 
