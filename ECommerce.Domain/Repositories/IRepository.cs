@@ -4,8 +4,8 @@ namespace ECommerce.Domain.Repositories;
 public interface IRepository<TEntity>
     : IReadRepository<TEntity> where TEntity : BaseEntity
 {
-    void Add(TEntity entity);
-    void AddRange(IEnumerable<TEntity> entities);
+    Task AddAsync(TEntity entity, CancellationToken ct = default);
+    Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken ct = default);
     void Update(TEntity entity);
     void UpdateRange(IEnumerable<TEntity> entities);
     void Delete(TEntity entity);

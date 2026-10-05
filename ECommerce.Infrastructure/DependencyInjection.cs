@@ -1,6 +1,9 @@
 ﻿using ECommerce.Domain.Interfaces.Repositories;
 using ECommerce.Domain.Repositories;
+using ECommerce.Domain.Settings;
 using ECommerce.Infrastructure.Caching;
+using ECommerce.Infrastructure.Identity;
+using ECommerce.Infrastructure.Identity.Validators;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Persistence.Interceptors;
 using ECommerce.Infrastructure.Persistence.Seeding;
@@ -8,7 +11,9 @@ using ECommerce.Infrastructure.Persistence.Seeding.Abstraction;
 using ECommerce.Infrastructure.Persistence.Seeding.Implementation;
 using ECommerce.Infrastructure.QueryServices;
 using ECommerce.Infrastructure.Repositories;
+using ECommerce.Infrastructure.Security;
 using ECommerce.UseCases.Abstractions;
+using ECommerce.UseCases.Commons.Interfaces;
 using ECommerce.UseCases.Commons.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,12 +31,21 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            options.UseSqlServer(connectionString)
+            options.UseSqlServer(connectionString,
+                sql => sql.MigrationsHistoryTable("__ApplicationMigrationHistory"))
+                .EnableSensitiveDataLogging();
+        });
+        services.AddDbContext<ApplicationIdentityDbContext>(options =>
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            options.UseSqlServer(connectionString,
+                sql => sql.MigrationsHistoryTable("__IdentityMigrationHistory"))
                 .EnableSensitiveDataLogging();
         });
 
         services.AddScoped<IDataSeeder, BrandSeeder>();
         services.AddScoped<IDataSeeder, TypeSeeder>();
+        services.AddScoped<IDataSeeder, IdentitySeeder>();
         services.AddScoped<DatabaseSeeder>();
 
         services.AddScoped<IAuditInterceptor, AuditInterceptor>();
@@ -41,9 +55,13 @@ public static class DependencyInjection
 
         AddCachingServices(services, configuration);
 
+        services.Configure<SuperAdminSettings>(configuration.GetSection("Seed:SuperAdminSettings"));
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
+
+        services.AddScoped<IIpSecurityService, IpSecurityService>();
         return services;
     }
-
     private static IServiceCollection AddCachingServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<CacheEntryPolicy>(configuration.GetSection("CacheEntryPolicy"));

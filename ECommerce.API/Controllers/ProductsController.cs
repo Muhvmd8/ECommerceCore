@@ -22,9 +22,8 @@ public class ProductsController(IMediator mediator) : ApiController
         CancellationToken ct = default)
     {
         var result = await mediator.Send(query, ct);
-        return FromPagedResult(result, query.PageNumber, query.PageSize, "ProductsRetrievedSuccessfully");
+        return FromPagedResult(result, query.PageNumber, query.PageSize, "Products Retrieved Successfully");
     }
-
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ApiResponse<GetProductByIdResponse>), StatusCodes.Status200OK)]

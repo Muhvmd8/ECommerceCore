@@ -50,7 +50,6 @@ namespace ECommerce.Infrastructure.Caching
         private async Task _RefreshExpirationIfNeedAsync(string key, CacheEnvelope<T> envelope, CancellationToken ct)
         {
             var utcNow = DateTimeOffset.UtcNow;
-
             var age = utcNow - envelope.LastAccessedAtUtc;
 
             if (age < TimeSpan.FromMinutes(_options.SlidingRefreshThresholdMinutes))

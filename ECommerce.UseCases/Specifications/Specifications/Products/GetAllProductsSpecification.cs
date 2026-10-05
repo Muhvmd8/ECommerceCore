@@ -8,8 +8,7 @@ public sealed class GetAllProductsSpecification
     {
         Query
             .AsNoTracking()
-            .OrderBy(p => p.Price)
-            .ThenByDescending(p => p.Name);
+            .OrderBy(p => p.Price);
 
         Query
             .Select(p => new GetAllProductsResponse

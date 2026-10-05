@@ -20,9 +20,9 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     #region Write Operations
 
-    public void Add(TEntity entity) => _dbSet.Add(entity);
+    public async Task AddAsync(TEntity entity, CancellationToken ct = default) => await _dbSet.AddAsync(entity, ct);
 
-    public void AddRange(IEnumerable<TEntity> entities) => _dbSet.AddRange(entities);
+    public async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken ct = default) => await _dbSet.AddRangeAsync(entities, ct);
 
     public void Update(TEntity entity) => _dbSet.Update(entity);
 

@@ -28,16 +28,14 @@ public abstract class ApiController : ControllerBase
             HttpContext.TraceIdentifier,
             message,
             pagination);
-
         return Ok(response);
     }
 
     protected ActionResult Problem(Result result)
-    {
-        return ApiResponseFactory.Problem(
-            result,
-            HttpContext.TraceIdentifier);
-    }
+        => ApiResponseFactory.Problem(
+                result,
+                HttpContext.TraceIdentifier);
+
 
     protected ActionResult<ApiResponse<T>> FromResult<T>(
         Result<T> result,
