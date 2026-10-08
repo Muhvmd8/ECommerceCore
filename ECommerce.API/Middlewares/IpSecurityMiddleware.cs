@@ -1,7 +1,7 @@
 ﻿using ECommerce.API.Factories;
 using ECommerce.Domain.Errors;
 using ECommerce.Domain.Shared;
-using ECommerce.UseCases.Commons.Interfaces;
+using ECommerce.UseCases.Abstractions;
 
 namespace ECommerce.API.Middlewares
 {

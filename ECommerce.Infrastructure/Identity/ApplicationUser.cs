@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ECommerce.Domain.Entities.Auth;
+using ECommerce.Infrastructure.Email;
+using Microsoft.AspNetCore.Identity;
 
 namespace ECommerce.Infrastructure.Identity
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
         public ApplicationUser() => Id = Guid.NewGuid();
-
-        #region Properties
         public string DisplayName { get; set; } = default!;
-        #endregion
+        public EmailVerificationCode EmailVerificationCode { get; set; } = default!;
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
     }
 }

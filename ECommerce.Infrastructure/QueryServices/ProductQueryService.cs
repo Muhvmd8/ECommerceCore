@@ -1,7 +1,7 @@
 ﻿using ECommerce.Domain.Entities.ProductModule;
 using ECommerce.Domain.Repositories;
 using ECommerce.UseCases.Abstractions;
-using ECommerce.UseCases.Products.DTOs;
+using ECommerce.UseCases.Features.Products.DTOs;
 using ECommerce.UseCases.Specifications.Specifications.Products;
 namespace ECommerce.Infrastructure.QueryServices;
 public class ProductQueryService(IReadRepository<Product> productRepository)

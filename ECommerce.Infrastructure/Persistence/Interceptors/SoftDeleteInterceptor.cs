@@ -1,4 +1,5 @@
 ﻿using ECommerce.Domain.Entities.Common;
+using ECommerce.Infrastructure.Email;
 using Microsoft.EntityFrameworkCore;
 namespace ECommerce.Infrastructure.Persistence.Interceptors;
 internal class SoftDeleteInterceptor : ISoftDeleteInterceptor
@@ -8,6 +9,8 @@ internal class SoftDeleteInterceptor : ISoftDeleteInterceptor
         foreach (var entry in dbContext.ChangeTracker.Entries<BaseEntity>())
         {
             if (entry.State != EntityState.Deleted)
+                continue;
+            if (entry.Entity is EmailVerificationCode)
                 continue;
 
             entry.State = EntityState.Modified;

@@ -1,10 +1,10 @@
 using ECommerce.API.Middlewares.Extensions;
-using ECommerce.Domain.Settings;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Identity;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Persistence.Seeding;
 using ECommerce.UseCases;
+using ECommerce.UseCases.Commons.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;

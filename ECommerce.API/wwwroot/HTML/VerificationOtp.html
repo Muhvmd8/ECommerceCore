@@ -1,0 +1,215 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رمز التحقق (OTP)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+            background-color: #f4f8fb;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            padding: 20px 12px;
+        }
+
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            padding: 28px 16px;
+            background: linear-gradient(135deg, #1E90FF, #0058d4);
+        }
+
+            .header img {
+                max-height: 48px;
+                display: block;
+                margin: 0 auto 8px auto;
+            }
+
+        .header-subtitle {
+            color: #eaf4ff;
+            font-size: 15px;
+            margin: 0;
+            font-family: 'Tajawal', Arial, sans-serif;
+        }
+
+        .body-content {
+            padding: 28px 24px;
+            color: #000;
+        }
+
+            .body-content p {
+                font-size: 15px;
+                color: #333;
+                margin: 0 0 16px 0;
+                line-height: 1.7;
+            }
+
+        .otp-box {
+            width: 100%;
+            border: 2px solid #0078FF;
+            border-radius: 10px;
+            margin: 16px 0;
+            background-color: #f0f8ff;
+            padding: 16px 12px;
+            text-align: center;
+        }
+
+        .otp-label {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+            font-family: 'Tajawal', Arial, sans-serif;
+        }
+
+        .otp-code {
+            margin: 8px 0 0 0;
+            font-size: 32px;
+            font-weight: 800;
+            color: #0078FF;
+            letter-spacing: 8px;
+            font-family: 'Tajawal', Arial, sans-serif;
+            word-break: break-all;
+        }
+
+        .validity-note {
+            font-size: 13px;
+            color: #777;
+            margin: 12px 0;
+        }
+
+        .divider {
+            margin: 24px 0;
+            border: none;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .security-title {
+            font-size: 14px;
+            color: #333;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+        }
+
+        .security-list {
+            font-size: 13px;
+            color: #555;
+            margin: 0;
+            padding-right: 18px;
+            padding-left: 0;
+            line-height: 1.8;
+        }
+
+            .security-list li {
+                margin-bottom: 4px;
+            }
+
+        .footer {
+            background-color: #f4f8fb;
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            line-height: 1.6;
+            font-family: 'Tajawal', Arial, sans-serif;
+        }
+
+        /* ===== Responsive Mobile ===== */
+        @media only screen and (max-width: 480px) {
+            .email-wrapper {
+                padding: 12px 8px;
+            }
+
+            .email-container {
+                border-radius: 8px;
+            }
+
+            .header {
+                padding: 20px 12px;
+            }
+
+            .header-subtitle {
+                font-size: 13px;
+            }
+
+            .body-content {
+                padding: 20px 16px;
+            }
+
+                .body-content p {
+                    font-size: 14px;
+                }
+
+            .otp-code {
+                font-size: 26px;
+                letter-spacing: 5px;
+            }
+
+            .security-list {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-container">
+
+            <!-- Header -->
+            <div class="header">
+                <img src="cid:logo" alt="Company Logo">
+                <p class="header-subtitle">رمز التحقق الخاص بك</p>
+            </div>
+
+            <!-- Body -->
+            <div class="body-content">
+                <p>استخدم رمز التحقق التالي لإتمام عملية تسجيل الدخول أو تأكيد الحساب:</p>
+
+                <div class="otp-box">
+                    <p class="otp-label">رمز التحقق (OTP):</p>
+                    <p class="otp-code">{{otp_code}}</p>
+                </div>
+
+                <p class="validity-note">الرمز صالح لمدة <strong>10 دقائق</strong> فقط.</p>
+
+                <hr class="divider">
+
+                <p class="security-title">نصائح الأمان:</p>
+                <ul class="security-list">
+                    <li>لا تشارك هذا الرمز مع أي شخص.</li>
+                    <li>في حال لم تطلب هذا الرمز، تجاهل هذه الرسالة.</li>
+                </ul>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                هذه الرسالة مرسلة تلقائياً — الرجاء عدم الرد.
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

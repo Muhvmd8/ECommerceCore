@@ -1,6 +1,6 @@
 ﻿using ECommerce.Domain.Entities.Security;
 using ECommerce.Domain.Repositories;
-using ECommerce.UseCases.Commons.Interfaces;
+using ECommerce.UseCases.Abstractions;
 using ECommerce.UseCases.Specifications.Specifications.Security;
 using Microsoft.Extensions.Logging;
 

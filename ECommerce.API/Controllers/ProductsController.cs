@@ -1,7 +1,10 @@
 ﻿using ECommerce.API.Models;
-using ECommerce.UseCases.Products.DTOs;
-using ECommerce.UseCases.Products.Queries;
-using ECommerce.UseCases.Products.Queries.Handlers;
+using ECommerce.UseCases.Features.Products.DTOs;
+using ECommerce.UseCases.Features.Products.Queries.GetAllBrands;
+using ECommerce.UseCases.Features.Products.Queries.GetAllPaginatedProducts;
+using ECommerce.UseCases.Features.Products.Queries.GetAllProducts;
+using ECommerce.UseCases.Features.Products.Queries.GetAllTypes;
+using ECommerce.UseCases.Features.Products.Queries.GetProductById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;

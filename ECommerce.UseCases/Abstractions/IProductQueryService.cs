@@ -1,4 +1,5 @@
-﻿using ECommerce.UseCases.Products.DTOs;
+﻿using ECommerce.UseCases.Features.Products.DTOs;
+
 namespace ECommerce.UseCases.Abstractions;
 public interface IProductQueryService
 {

@@ -1,9 +1,12 @@
 ﻿using ECommerce.API.Attributes;
 using ECommerce.API.Controllers.Extensions;
 using ECommerce.API.Models;
-using ECommerce.UseCases.Baskets.Commands;
-using ECommerce.UseCases.Baskets.DTOs;
-using ECommerce.UseCases.Baskets.Queries;
+using ECommerce.UseCases.Features.Baskets.Commands.AddBasketItem;
+using ECommerce.UseCases.Features.Baskets.Commands.MergeBasket;
+using ECommerce.UseCases.Features.Baskets.Commands.RemoveBasketItem;
+using ECommerce.UseCases.Features.Baskets.Commands.UpdateBasketItemQuantity;
+using ECommerce.UseCases.Features.Baskets.DTOs;
+using ECommerce.UseCases.Features.Baskets.Queries.GetBasket;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 namespace ECommerce.API.Controllers

@@ -1,6 +1,6 @@
 ﻿using ECommerce.Domain.Entities.ProductModule;
-using ECommerce.UseCases.Products.DTOs;
-using ECommerce.UseCases.Products.Enums;
+using ECommerce.UseCases.Features.Products.DTOs;
+using ECommerce.UseCases.Features.Products.Enums;
 
 namespace ECommerce.UseCases.Specifications.Specifications.Products
 {

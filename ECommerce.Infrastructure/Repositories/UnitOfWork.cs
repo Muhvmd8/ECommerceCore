@@ -1,5 +1,4 @@
 using ECommerce.Domain.Entities.Common;
-using ECommerce.Domain.Interfaces.Repositories;
 using ECommerce.Domain.Repositories;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Persistence.Interceptors;

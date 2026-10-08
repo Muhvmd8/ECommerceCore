@@ -5,7 +5,7 @@ using ECommerce.Domain.Specifications;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;
-namespace ECommerce.Domain.Interfaces.Repositories;
+namespace ECommerce.Infrastructure.Repositories;
 public class Repository<TEntity> : IRepository<TEntity>
     where TEntity : BaseEntity
 {

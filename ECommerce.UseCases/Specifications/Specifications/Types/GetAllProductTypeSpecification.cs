@@ -1,5 +1,5 @@
 ﻿using ECommerce.Domain.Entities.ProductModule;
-using ECommerce.UseCases.Products.DTOs;
+using ECommerce.UseCases.Features.Products.DTOs;
 
 namespace ECommerce.UseCases.Specifications.Specifications.Types
 {

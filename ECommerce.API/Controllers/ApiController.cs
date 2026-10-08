@@ -19,9 +19,9 @@ public abstract class ApiController : ControllerBase
     protected string _GetEmailFromToken() => User.FindFirst(ClaimTypes.Name)?.Value!;
 
     protected ActionResult<ApiResponse<T>> Success<T>(
-    T data,
-    string? message = null,
-    PaginationMeta? pagination = null)
+        T data,
+        string? message = null,
+        PaginationMeta? pagination = null)
     {
         var response = ApiResponseFactory.Success(
             data,
@@ -35,7 +35,6 @@ public abstract class ApiController : ControllerBase
         => ApiResponseFactory.Problem(
                 result,
                 HttpContext.TraceIdentifier);
-
 
     protected ActionResult<ApiResponse<T>> FromResult<T>(
         Result<T> result,

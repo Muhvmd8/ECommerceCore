@@ -23,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Mapster" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.20">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -35,7 +36,10 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.10.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.20" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.20" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.20" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.20" />
+	<PackageReference Include="MailKit" Version="4.18.1" />
+	<PackageReference Include="MimeKit" Version="4.18.1" />
   </ItemGroup>
 
   <ItemGroup>
