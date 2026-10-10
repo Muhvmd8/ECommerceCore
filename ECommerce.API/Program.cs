@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using ECommerce.API.Endpoints;
+using ECommerce.API.Filters;
 using ECommerce.API.Middlewares.Extensions;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Identity;
@@ -13,6 +14,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Serilog.Ui.Core.Extensions;
+using Serilog.Ui.MsSqlServerProvider.Extensions;
+using Serilog.Ui.Web.Extensions;
 using System.Text;
 namespace ECommerce.API;
 public class Program
@@ -34,6 +38,15 @@ public class Program
                 .ReadFrom.Services(services)
                 .Enrich.FromLogContext();
         });
+
+        builder.Services.AddSerilogUi(options =>
+            options.UseSqlServer(opts => opts
+                .WithConnectionString(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty)
+                .WithSchema("Logging")
+                .WithTable("Logs")
+            )
+            .AddScopedAsyncAuthFilter<SerilogUiAuthorizationFilter>()
+        );
         #endregion
 
         builder.Services.AddOutputCache(options =>
@@ -140,6 +153,11 @@ public class Program
 
         #region IP Security Middleware
         app.UseIpSecurity();
+        #endregion
+
+        #region SerilogUI Middleware
+        app.UseSerilogUiAuth();
+        app.UseSerilogUi();
         #endregion
 
         app.UseAuthentication();
