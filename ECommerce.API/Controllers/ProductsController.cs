@@ -1,9 +1,7 @@
 ﻿using ECommerce.API.Models;
 using ECommerce.UseCases.Features.Products.DTOs;
-using ECommerce.UseCases.Features.Products.Queries.GetAllBrands;
 using ECommerce.UseCases.Features.Products.Queries.GetAllPaginatedProducts;
 using ECommerce.UseCases.Features.Products.Queries.GetAllProducts;
-using ECommerce.UseCases.Features.Products.Queries.GetAllTypes;
 using ECommerce.UseCases.Features.Products.Queries.GetProductById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -34,20 +32,6 @@ public class ProductsController(IMediator mediator) : ApiController
     public async Task<ActionResult<ApiResponse<GetProductByIdResponse>>> GetProductById(int id, CancellationToken ct = default)
     {
         var result = await mediator.Send(new GetProductByIdQuery(id), ct);
-        return FromResult(result);
-    }
-
-    [HttpGet("brands")]
-    public async Task<ActionResult<ApiResponse<IReadOnlyList<GetAllBrandsResponse>>>> GetAllBrands(CancellationToken ct = default)
-    {
-        var result = await mediator.Send(new GetAllBrandsQuery(), ct);
-        return FromResult(result);
-    }
-
-    [HttpGet("types")]
-    public async Task<ActionResult<ApiResponse<IReadOnlyList<GetAllTypesResponse>>>> GetAllTypes(CancellationToken ct = default)
-    {
-        var result = await mediator.Send(new GetAllTypesQuery(), ct);
         return FromResult(result);
     }
 }

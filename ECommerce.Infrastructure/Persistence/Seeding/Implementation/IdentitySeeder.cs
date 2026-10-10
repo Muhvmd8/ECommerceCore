@@ -1,4 +1,4 @@
-﻿using ECommerce.Domain.Consts;
+﻿using ECommerce.Domain.Constants;
 using ECommerce.Domain.Settings;
 using ECommerce.Infrastructure.Identity;
 using ECommerce.Infrastructure.Persistence.Seeding.Abstraction;

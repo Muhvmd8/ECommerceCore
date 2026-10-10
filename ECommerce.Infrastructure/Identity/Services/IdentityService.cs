@@ -1,4 +1,4 @@
-﻿using ECommerce.Domain.Consts;
+﻿using ECommerce.Domain.Constants;
 using ECommerce.Domain.Errors;
 using ECommerce.Domain.Shared;
 using ECommerce.UseCases.Abstractions;

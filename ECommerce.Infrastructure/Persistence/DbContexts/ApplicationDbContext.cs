@@ -1,4 +1,5 @@
-﻿using ECommerce.Domain.Entities.Security;
+﻿using ECommerce.Domain.Entities.OrderModule;
+using ECommerce.Domain.Entities.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Infrastructure.Persistence.DbContexts;
@@ -8,6 +9,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<LoginAudit> LoginAudits { get; set; } = default!;
     public DbSet<BlockedIp> BlockedIps { get; set; } = default!;
+    public DbSet<DeliveryMethod> DeliveryMethods { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

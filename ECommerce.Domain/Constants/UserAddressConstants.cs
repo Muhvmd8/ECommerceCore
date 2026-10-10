@@ -1,6 +1,6 @@
-﻿namespace ECommerce.Domain.Consts
+﻿namespace ECommerce.Domain.Constants
 {
-    public static class UserAddressConsts
+    public static class UserAddressConstants
     {
         public const int MaxLabelLength = 50;
         public const int MaxCountryLength = 100;

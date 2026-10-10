@@ -1,4 +1,6 @@
-﻿using ECommerce.API.Factories;
+﻿using Asp.Versioning;
+using ECommerce.API.Factories;
+using ECommerce.API.Filters;
 using ECommerce.API.Models;
 using ECommerce.Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -6,10 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 namespace ECommerce.API.Controllers;
 [ApiController]
-[Route("api/[controller]")]
 // automatic model validation
 // detect data from (form, query, route, etc)
 // when the problem is detected, it will return a object of problem details by default.
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ServiceFilter(typeof(AuditActionFilter))]
 public abstract class ApiController : ControllerBase
 {
     [Authorize]

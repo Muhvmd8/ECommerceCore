@@ -68,6 +68,8 @@ namespace ECommerce.Domain.Entities.BasketModule
             return existingItem.IncreaseQuantity(quantity);
         }
 
+        public void Clear() => Items.Clear();
+
         public Result MergeFrom(Basket other)
         {
             if (other.BuyerId == BuyerId)

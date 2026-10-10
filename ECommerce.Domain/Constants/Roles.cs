@@ -1,4 +1,4 @@
-﻿namespace ECommerce.Domain.Consts
+﻿namespace ECommerce.Domain.Constants
 {
     public static class Roles
     {

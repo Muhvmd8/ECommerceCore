@@ -21,7 +21,7 @@ namespace ECommerce.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await mediator.Send(command, cancellationToken);
-            return FromResult(result, "Registration Completed Successfully");
+            return FromResult(result, ApiMessages.Registered);
         }
 
         [HttpPost("verify-registration-otp")]
@@ -32,7 +32,7 @@ namespace ECommerce.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await mediator.Send(command, cancellationToken);
-            return Success<object>(result, "Email Verified Successfully");
+            return Success<object>(result, ApiMessages.EmailConfirmed);
         }
 
         [HttpPost("login")]
@@ -44,7 +44,7 @@ namespace ECommerce.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await mediator.Send(command, cancellationToken);
-            return FromResult(result, "Login Successfully");
+            return FromResult(result, ApiMessages.LoggedIn);
         }
 
         [HttpPost("refresh-token")]
@@ -56,7 +56,7 @@ namespace ECommerce.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await mediator.Send(command, cancellationToken);
-            return FromResult(result, "Token Refreshed Successfully");
+            return FromResult(result, ApiMessages.TokenRefreshed);
         }
 
         [HttpPost("change-password")]
@@ -68,7 +68,7 @@ namespace ECommerce.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await mediator.Send(command, cancellationToken);
-            return FromResult<object>(result, "Password Changed Successfully");
+            return FromResult<object>(result, ApiMessages.UserProfileUpdated);
         }
     }
 }

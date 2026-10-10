@@ -32,14 +32,8 @@ namespace ECommerce.Infrastructure.Security
             CancellationToken cancellationToken = default)
         {
             var cutoff = DateTime.UtcNow - window;
-
-            var specification =
-                new FailedLoginAttemptsSpecification(ip, cutoff);
-
-            var failedAttempts = await _loginAuditRepository.CountAsync(
-                specification,
-                cancellationToken);
-
+            var specification = new FailedLoginAttemptsSpecification(ip, cutoff);
+            var failedAttempts = await _loginAuditRepository.CountAsync(specification, cancellationToken);
             return failedAttempts >= maxAttempts;
         }
 

@@ -1,6 +1,5 @@
 ﻿using ECommerce.Domain.Shared;
 using ECommerce.UseCases.Abstractions;
-using ECommerce.UseCases.Commons.Interfaces;
 using ECommerce.UseCases.Features.Auth.DTOs;
 using MediatR;
 

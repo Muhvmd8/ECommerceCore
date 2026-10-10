@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using ECommerce.API.Endpoints;
 using ECommerce.API.Middlewares.Extensions;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Identity;
@@ -96,6 +98,22 @@ public class Program
         app.UseExceptionHandler();
         app.UseOutputCache();
 
+        #region Versioning
+        var apiVersionSet = app.NewApiVersionSet()
+            .HasApiVersion(new ApiVersion(1, 0))
+            .ReportApiVersions()
+            .Build();
+        #endregion
+
+        #region Map Endpoints
+        app.MapTypeEndpoints(apiVersionSet);
+        app.MapBrandEndpoints(apiVersionSet);
+        app.MapUserEndpoints(apiVersionSet);
+        app.MapDeliveryMethodEndpoints(apiVersionSet);
+        app.MapOrderEndpoints(apiVersionSet);
+        app.MapPaymentEndpoints(apiVersionSet);
+        #endregion
+
         #region Data Seeding
         if (app.Environment.IsDevelopment())
         {
@@ -111,23 +129,21 @@ public class Program
         }
         #endregion
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger(); // run middleware that makes documentation file available to use.
-            app.UseSwaggerUI();
-        }
-
-        #region IP Security Middleware
-        app.UseIpSecurity();
+        #region Configure Swagger
+        app.UseSwagger(); // run middleware that makes documentation file available to use.
+        app.UseSwaggerUI();
         #endregion
 
         app.UseHttpsRedirection();
 
         app.UseSerilogRequestLogging();
 
+        #region IP Security Middleware
+        app.UseIpSecurity();
+        #endregion
+
         app.UseAuthentication();
         app.UseAuthorization();
-
 
         app.MapControllers();
 

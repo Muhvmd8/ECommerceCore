@@ -2,6 +2,7 @@
 {
     public sealed class SmtpSettings
     {
+        public const string SectionName = "SmtpSettings";
         public string Host { get; set; } = default!;
         public int Port { get; set; }
         public string Username { get; set; } = default!;

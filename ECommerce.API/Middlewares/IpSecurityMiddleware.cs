@@ -24,30 +24,16 @@ namespace ECommerce.API.Middlewares
         {
             var cancellationToken = context.RequestAborted;
 
-            var ip =
-                context.Connection.RemoteIpAddress?.ToString()
-                ?? "unknown";
+            var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 
             // 1. Check if IP is already blocked
-            if (await security.IsIpBlockedAsync(
-                    ip,
-                    cancellationToken))
+            if (await security.IsIpBlockedAsync(ip, cancellationToken))
             {
-                context.Response.StatusCode =
-                    StatusCodes.Status403Forbidden;
-
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 var result = Result.Failure(SecurityErrors.IpBlocked);
-
-                var problem = ApiResponseFactory.Problem(
-                    result,
-                    context.TraceIdentifier);
-
+                var problem = ApiResponseFactory.Problem(result, context.TraceIdentifier);
                 context.Response.StatusCode = problem.StatusCode ?? StatusCodes.Status403Forbidden;
-
-                await context.Response.WriteAsJsonAsync(
-                    problem,
-                    cancellationToken);
-
+                await context.Response.WriteAsJsonAsync(problem, cancellationToken);
                 return;
             }
 
@@ -100,10 +86,10 @@ namespace ECommerce.API.Middlewares
 
             // 5. Check brute-force attempts
             if (await security.TooManyFailedLogins(
-                    ip,
-                    maxAttempts: 5,
-                    window: TimeSpan.FromMinutes(5),
-                    cancellationToken))
+                ip,
+                maxAttempts: 5,
+                window: TimeSpan.FromMinutes(5),
+                cancellationToken))
             {
                 await security.BlockIpAsync(
                     ip,
@@ -115,6 +101,20 @@ namespace ECommerce.API.Middlewares
                     "Brute force detected for IP {IpAddress}",
                     ip);
             }
+
+            // if (riskDetected)
+            // {
+            //     db.LoginAudits.Add(new LoginAudit
+            //     {
+            //         Username = context.User?.Identity?.Name ?? "Anonymous",
+            //         IpAddress = ip,
+            //         Endpoint = context.Request.Path,
+            //         Status = context.Response.StatusCode < 400 ? "Success" : "Failed",
+            //         RequestBody = body
+            //     });
+            // 
+            //     await db.SaveChangesAsync();
+            // }
         }
     }
 }

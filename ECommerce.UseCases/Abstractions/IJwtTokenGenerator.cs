@@ -1,4 +1,4 @@
-﻿namespace ECommerce.UseCases.Commons.Interfaces
+﻿namespace ECommerce.UseCases.Abstractions
 {
     public record AccessTokenResult(string Token, string JwtId, DateTime ExpiresAtUtc);
     public interface IJwtTokenGenerator

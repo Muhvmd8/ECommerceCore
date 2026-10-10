@@ -1,13 +1,13 @@
-﻿using ECommerce.Domain.Consts;
+﻿using ECommerce.Domain.Constants;
+using ECommerce.Domain.Entities.Common;
 using ECommerce.Domain.Errors;
 using ECommerce.Domain.Shared;
 
 namespace ECommerce.Domain.Entities.UserModule
 {
-    public class UserAddress
+    public class UserAddress : BaseEntity<Guid>
     {
         #region Properties
-        public Guid Id { get; private set; }
         public Guid ApplicationUserId { get; private set; } = default!;
         public string Label { get; private set; } = default!;
         public string Country { get; private set; } = default!;
@@ -187,7 +187,7 @@ namespace ECommerce.Domain.Entities.UserModule
             if (string.IsNullOrWhiteSpace(label))
                 return Result.Failure(UserAddressErrors.LabelRequired);
 
-            if (label.Length > UserAddressConsts.MaxLabelLength)
+            if (label.Length > UserAddressConstants.MaxLabelLength)
                 return Result.Failure(UserAddressErrors.LabelTooLong);
 
             return Result.Success();
@@ -198,7 +198,7 @@ namespace ECommerce.Domain.Entities.UserModule
             if (string.IsNullOrWhiteSpace(country))
                 return Result.Failure(UserAddressErrors.CountryRequired);
 
-            if (country.Length > UserAddressConsts.MaxCountryLength)
+            if (country.Length > UserAddressConstants.MaxCountryLength)
                 return Result.Failure(UserAddressErrors.CountryTooLong);
 
             return Result.Success();
@@ -209,7 +209,7 @@ namespace ECommerce.Domain.Entities.UserModule
             if (string.IsNullOrWhiteSpace(city))
                 return Result.Failure(UserAddressErrors.CityRequired);
 
-            if (city.Length > UserAddressConsts.MaxCityLength)
+            if (city.Length > UserAddressConstants.MaxCityLength)
                 return Result.Failure(UserAddressErrors.CityTooLong);
 
             return Result.Success();
@@ -220,7 +220,7 @@ namespace ECommerce.Domain.Entities.UserModule
             if (string.IsNullOrWhiteSpace(street))
                 return Result.Failure(UserAddressErrors.StreetRequired);
 
-            if (street.Length > UserAddressConsts.MaxStreetLength)
+            if (street.Length > UserAddressConstants.MaxStreetLength)
                 return Result.Failure(UserAddressErrors.StreetTooLong);
 
             return Result.Success();
@@ -231,7 +231,7 @@ namespace ECommerce.Domain.Entities.UserModule
             if (string.IsNullOrWhiteSpace(firstName))
                 return Result.Failure(UserAddressErrors.FirstNameRequired);
 
-            if (firstName.Length > UserAddressConsts.MaxFirstNameLength)
+            if (firstName.Length > UserAddressConstants.MaxFirstNameLength)
                 return Result.Failure(UserAddressErrors.FirstNameTooLong);
 
             return Result.Success();
@@ -242,7 +242,7 @@ namespace ECommerce.Domain.Entities.UserModule
             if (string.IsNullOrWhiteSpace(lastName))
                 return Result.Failure(UserAddressErrors.LastNameRequired);
 
-            if (lastName.Length > UserAddressConsts.MaxLastNameLength)
+            if (lastName.Length > UserAddressConstants.MaxLastNameLength)
                 return Result.Failure(UserAddressErrors.LastNameTooLong);
 
             return Result.Success();
@@ -253,7 +253,7 @@ namespace ECommerce.Domain.Entities.UserModule
             if (string.IsNullOrWhiteSpace(phone))
                 return Result.Failure(UserAddressErrors.PhoneRequired);
 
-            if (phone.Length > UserAddressConsts.MaxPhoneLength)
+            if (phone.Length > UserAddressConstants.MaxPhoneLength)
                 return Result.Failure(UserAddressErrors.PhoneTooLong);
 
             return Result.Success();

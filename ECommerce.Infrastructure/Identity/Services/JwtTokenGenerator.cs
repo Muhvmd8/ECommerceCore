@@ -1,4 +1,4 @@
-﻿using ECommerce.UseCases.Commons.Interfaces;
+﻿using ECommerce.UseCases.Abstractions;
 using ECommerce.UseCases.Commons.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

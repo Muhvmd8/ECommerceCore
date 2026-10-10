@@ -3,7 +3,7 @@ using ECommerce.Domain.Errors;
 using ECommerce.Domain.Repositories;
 using ECommerce.Domain.Shared;
 using ECommerce.Infrastructure.Identity.Specifications;
-using ECommerce.UseCases.Commons.Interfaces;
+using ECommerce.UseCases.Abstractions;
 using ECommerce.UseCases.Commons.Options;
 using Microsoft.Extensions.Options;
 using System.Security.Cryptography;

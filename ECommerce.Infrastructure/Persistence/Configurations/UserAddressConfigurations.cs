@@ -1,4 +1,4 @@
-﻿using ECommerce.Domain.Consts;
+﻿using ECommerce.Domain.Constants;
 using ECommerce.Domain.Entities.UserModule;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,27 +14,27 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.Country)
                 .IsRequired()
-                .HasMaxLength(UserAddressConsts.MaxCountryLength);
+                .HasMaxLength(UserAddressConstants.MaxCountryLength);
 
             builder.Property(x => x.City)
                 .IsRequired()
-                .HasMaxLength(UserAddressConsts.MaxCityLength);
+                .HasMaxLength(UserAddressConstants.MaxCityLength);
 
             builder.Property(x => x.Street)
                 .IsRequired()
-                .HasMaxLength(UserAddressConsts.MaxStreetLength);
+                .HasMaxLength(UserAddressConstants.MaxStreetLength);
 
             builder.Property(x => x.RecipientFirstName)
                 .IsRequired()
-                .HasMaxLength(UserAddressConsts.MaxFirstNameLength);
+                .HasMaxLength(UserAddressConstants.MaxFirstNameLength);
 
             builder.Property(x => x.RecipientLastName)
                 .IsRequired()
-                .HasMaxLength(UserAddressConsts.MaxLastNameLength);
+                .HasMaxLength(UserAddressConstants.MaxLastNameLength);
 
             builder.Property(x => x.Phone)
                 .IsRequired()
-                .HasMaxLength(UserAddressConsts.MaxPhoneLength);
+                .HasMaxLength(UserAddressConstants.MaxPhoneLength);
 
             builder.HasIndex(x => x.ApplicationUserId, "IX_UserAddresses_ApplicationUserId");
         }

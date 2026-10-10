@@ -1,4 +1,4 @@
-﻿using ECommerce.Domain.Consts;
+﻿using ECommerce.Domain.Constants;
 using ECommerce.Domain.Errors;
 using ECommerce.Domain.Shared;
 using System.Text.Json.Serialization;
@@ -87,8 +87,8 @@ namespace ECommerce.Domain.Entities.BasketModule
                 : Result.Failure(BasketErrors.InvalidUnitPrice);
 
         private static Result SetQuantity(int quantity)
-            => quantity >= BasketItemConsts.MinQuantity &&
-               quantity <= BasketItemConsts.MaxQuantity
+            => quantity >= BasketItemConstants.MinQuantity &&
+               quantity <= BasketItemConstants.MaxQuantity
                 ? Result.Success()
                 : Result.Failure(BasketErrors.InvalidQuantity);
 
@@ -99,7 +99,7 @@ namespace ECommerce.Domain.Entities.BasketModule
 
             var newQuantity = Quantity + amount;
 
-            if (Quantity >= BasketItemConsts.MaxQuantity)
+            if (Quantity >= BasketItemConstants.MaxQuantity)
                 return Result.Failure(BasketErrors.QuantityTooHigh);
 
             Quantity = newQuantity;
@@ -108,7 +108,7 @@ namespace ECommerce.Domain.Entities.BasketModule
         }
         public Result SetSpecifiedQuantity(int quantity)
         {
-            if (quantity is < BasketItemConsts.MinQuantity or > BasketItemConsts.MaxQuantity)
+            if (quantity is < BasketItemConstants.MinQuantity or > BasketItemConstants.MaxQuantity)
                 return Result.Failure(BasketErrors.InvalidQuantity);
 
             Quantity = quantity;

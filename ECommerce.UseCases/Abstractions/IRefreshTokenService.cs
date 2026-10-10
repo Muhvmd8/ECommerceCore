@@ -1,6 +1,6 @@
 ﻿using ECommerce.Domain.Shared;
 
-namespace ECommerce.UseCases.Commons.Interfaces
+namespace ECommerce.UseCases.Abstractions
 {
     public sealed record RefreshTokenInfo(Guid UserId, string JwtId);
     public sealed record RefreshTokenResult(string Token, DateTime ExpiresAtUtc);

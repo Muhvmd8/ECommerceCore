@@ -1,4 +1,4 @@
-﻿using ECommerce.Domain.Consts;
+﻿using ECommerce.Domain.Constants;
 using ECommerce.Domain.Shared;
 
 namespace ECommerce.Domain.Errors
@@ -63,12 +63,12 @@ namespace ECommerce.Domain.Errors
         public static readonly Error InvalidQuantity =
             Error.Validation(
                 "BasketItem.InvalidQuantity",
-                $"Quantity must be between {BasketItemConsts.MinQuantity} and {BasketItemConsts.MaxQuantity}.");
+                $"Quantity must be between {BasketItemConstants.MinQuantity} and {BasketItemConstants.MaxQuantity}.");
 
         public static readonly Error QuantityTooHigh =
             Error.Validation(
                 "BasketItem.InvalidQuantityIncrement",
-                $"Quantity cannot exceed {BasketItemConsts.MaxQuantity}.");
+                $"Quantity cannot exceed {BasketItemConstants.MaxQuantity}.");
 
         public static readonly Error InvalidAmountIncrement =
             Error.Validation(
