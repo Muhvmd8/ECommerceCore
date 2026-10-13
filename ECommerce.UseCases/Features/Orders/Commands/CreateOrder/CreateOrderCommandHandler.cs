@@ -1,9 +1,11 @@
+using ECommerce.Domain.Entities.NotificationModule;
 using ECommerce.Domain.Entities.OrderModule;
 using ECommerce.Domain.Entities.UserModule;
 using ECommerce.Domain.Errors;
 using ECommerce.Domain.Repositories;
 using ECommerce.Domain.Shared;
 using ECommerce.UseCases.Abstractions;
+using ECommerce.UseCases.Commons.DTOs;
 using ECommerce.UseCases.Features.DeliveryMethods.Specifications;
 using ECommerce.UseCases.Features.Orders.Dtos;
 using ECommerce.UseCases.Features.Orders.Specifications;
@@ -17,7 +19,8 @@ public sealed class CreateOrderCommandHandler(
     IReadRepository<UserAddress> addressRepository,
     IRepository<DeliveryMethod> deliveryMethodRepository,
     IRepository<Order> orderRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    INotificationCommandService notificationService)
     : IRequestHandler<CreateOrderCommand, Result<OrderResponse>>
 {
     public async Task<Result<OrderResponse>> Handle(
@@ -72,6 +75,14 @@ public sealed class CreateOrderCommandHandler(
 
         basket.Clear();
         await basketRepository.SaveAsync(basket, cancellationToken);
+
+        await notificationService.SendAsync(new NotificationCreateDto
+        {
+            UserId = userId,
+            Type = NotificationType.OrderPlaced,
+            Message = $"Your order {order.Id} has been created successfully.",
+            Data = new { OrderId = order.Id }
+        }, cancellationToken);
 
         return Result<OrderResponse>.Success(OrderMappings.ToResponse(order));
     }

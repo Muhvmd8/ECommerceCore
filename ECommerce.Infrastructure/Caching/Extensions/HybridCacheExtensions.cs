@@ -1,35 +1,34 @@
 ﻿using Microsoft.Extensions.Caching.Hybrid;
 
-namespace ECommerce.Infrastructure.Caching.Extensions
+namespace ECommerce.Infrastructure.Caching.Extensions;
+
+internal static class HybridCacheExtensions
 {
-    internal static class HybridCacheExtensions
+    private static readonly HybridCacheEntryOptions ReadOnlyOptions = new()
     {
-        private static readonly HybridCacheEntryOptions readOnlyOptions = new()
-        {
-            Flags = HybridCacheEntryFlags.DisableLocalCacheWrite |
+        Flags =
+            HybridCacheEntryFlags.DisableLocalCacheWrite |
             HybridCacheEntryFlags.DisableDistributedCacheWrite
-        };
+    };
 
-        public static async ValueTask<T?> TryGetAsync<T>(
-            this HybridCache cache,
-            string key,
-            CancellationToken ct = default)
-        {
-            var found = false;
+    public static async ValueTask<T?> TryGetAsync<T>(
+        this HybridCache cache,
+        string key,
+        CancellationToken ct = default)
+        where T : class
+    {
+        var factoryCalled = false;
 
-            var value = await cache.GetOrCreateAsync
-            (
-                key,
-                _ =>
-                {
-                    found = false;
-                    return ValueTask.FromResult<T?>(default);
-                },
-                readOnlyOptions,
-                cancellationToken: ct
-            );
+        var value = await cache.GetOrCreateAsync<T?>(
+            key,
+            _ =>
+            {
+                factoryCalled = true;
+                return ValueTask.FromResult<T?>(null);
+            },
+            ReadOnlyOptions,
+            cancellationToken: ct);
 
-            return found ? value : default;
-        }
+        return factoryCalled ? null : value;
     }
 }

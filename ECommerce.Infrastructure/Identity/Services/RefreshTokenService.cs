@@ -1,17 +1,17 @@
 ﻿using ECommerce.Domain.Entities.Auth;
 using ECommerce.Domain.Errors;
-using ECommerce.Domain.Repositories;
 using ECommerce.Domain.Shared;
-using ECommerce.Infrastructure.Identity.Specifications;
 using ECommerce.UseCases.Abstractions;
+using ECommerce.UseCases.Commons.DTOs;
 using ECommerce.UseCases.Commons.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 
 namespace ECommerce.Infrastructure.Identity.Services
 {
     public sealed class RefreshTokenService(
-        IUnitOfWork unitOfWork,
+        ApplicationIdentityDbContext context,
         IOptions<JwtSettings> options)
         : IRefreshTokenService
     {
@@ -35,9 +35,8 @@ namespace ECommerce.Infrastructure.Identity.Services
                 IsUsed = false,
                 IsRevoked = false
             };
-            var repository = unitOfWork.GetRepository<RefreshToken>();
-            await repository.AddAsync(refreshToken);
-            await unitOfWork.SaveChangesAsync();
+            await context.RefreshTokens.AddAsync(refreshToken);
+            await context.SaveChangesAsync();
 
             return Result<RefreshTokenResult>.Success(
                 new RefreshTokenResult(tokenValue, expiresAtUtc));
@@ -47,8 +46,8 @@ namespace ECommerce.Infrastructure.Identity.Services
             string token,
             CancellationToken cancellationToken = default)
         {
-            var repository = unitOfWork.GetRepository<RefreshToken>();
-            var refreshToken = await repository.FirstOrDefaultAsync(new GetRefreshTokenSpecification(token));
+            var refreshToken = await context.RefreshTokens
+                .FirstOrDefaultAsync(r => r.Token == token, cancellationToken);
 
             if (refreshToken is null)
                 return Result<RefreshTokenInfo>.Failure(IdentityErrors.InvalidRefreshToken);
@@ -68,8 +67,8 @@ namespace ECommerce.Infrastructure.Identity.Services
             string token,
             CancellationToken cancellationToken = default)
         {
-            var repository = unitOfWork.GetRepository<RefreshToken>();
-            var refreshToken = await repository.FirstOrDefaultAsync(new GetRefreshTokenSpecification(token));
+            var refreshToken = await context.RefreshTokens
+                .FirstOrDefaultAsync(r => r.Token == token, cancellationToken);
 
             if (refreshToken is null)
                 return Result.Failure(IdentityErrors.InvalidRefreshToken);
@@ -77,8 +76,8 @@ namespace ECommerce.Infrastructure.Identity.Services
             refreshToken.IsRevoked = true;
             refreshToken.IsUsed = true;
 
-            repository.Update(refreshToken);
-            await unitOfWork.SaveChangesAsync();
+            context.RefreshTokens.Update(refreshToken);
+            await context.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
         }

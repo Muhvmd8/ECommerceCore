@@ -1,8 +1,10 @@
 ﻿using ECommerce.API.Models;
+using ECommerce.Domain.Shared;
 using ECommerce.UseCases.Features.Auth.Commands.ChangePassword;
 using ECommerce.UseCases.Features.Auth.Commands.Login;
 using ECommerce.UseCases.Features.Auth.Commands.RefreshToken;
 using ECommerce.UseCases.Features.Auth.Commands.Register;
+using ECommerce.UseCases.Features.Auth.Commands.ResendEmailVerificationCode;
 using ECommerce.UseCases.Features.Auth.Commands.VerifyRegistrationOtp;
 using ECommerce.UseCases.Features.Auth.DTOs;
 using MediatR;
@@ -25,14 +27,25 @@ namespace ECommerce.API.Controllers
         }
 
         [HttpPost("verify-registration-otp")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<Result>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ApiResponse<object>>> VerifyRegistrationOtp(
+        public async Task<ActionResult<ApiResponse<Result>>> VerifyRegistrationOtp(
             VerifyRegistrationOtpCommand command,
             CancellationToken cancellationToken = default)
         {
             var result = await mediator.Send(command, cancellationToken);
-            return Success<object>(result, ApiMessages.EmailConfirmed);
+            return FromResult<Result>(result, ApiMessages.EmailConfirmed);
+        }
+
+        [HttpPost("resend-email-verification-code")]
+        [ProducesResponseType(typeof(ApiResponse<Result>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponse<Result>>> ResendEmailVerificationCode(
+            ResendEmailVerificationCommand command,
+            CancellationToken cancellationToken = default)
+        {
+            var result = await mediator.Send(command, cancellationToken);
+            return FromResult<Result>(result, ApiMessages.VerificationCodeSent);
         }
 
         [HttpPost("login")]
@@ -60,15 +73,15 @@ namespace ECommerce.API.Controllers
         }
 
         [HttpPost("change-password")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<Result>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ApiResponse<object>>> ChangePassword(
+        public async Task<ActionResult<ApiResponse<Result>>> ChangePassword(
             ChangePasswordCommand command,
             CancellationToken cancellationToken = default)
         {
             var result = await mediator.Send(command, cancellationToken);
-            return FromResult<object>(result, ApiMessages.UserProfileUpdated);
+            return FromResult<Result>(result, ApiMessages.UserProfileUpdated);
         }
     }
 }

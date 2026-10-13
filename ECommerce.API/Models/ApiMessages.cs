@@ -34,5 +34,11 @@
         public const string DeliveryMethodCreated = "Delivery method created successfully.";
         public const string DeliveryMethodUpdated = "Delivery method updated successfully.";
         public const string DeliveryMethodDeleted = "Delivery method deleted successfully.";
+
+        public const string NotificationsRetrieved = "Notifications retrieved successfully.";
+        public const string UnreadNotificationCountRetrieved = "Unread notification count retrieved successfully.";
+        public const string NotificationMarkedAsRead = "Notification marked as read successfully.";
+        public const string AllNotificationsMarkedAsRead = "All notifications marked as read successfully.";
+        public const string NotificationDeleted = "Notification deleted successfully.";
     }
 }

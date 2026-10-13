@@ -1,4 +1,5 @@
 ﻿using ECommerce.Domain.Shared;
+using ECommerce.UseCases.Commons.DTOs;
 
 namespace ECommerce.UseCases.Abstractions
 {
@@ -25,14 +26,4 @@ namespace ECommerce.UseCases.Abstractions
         /// <summary>Called when payment_intent.payment_failed.</summary>
         Task PaymentFailed(string paymentIntentId, CancellationToken cancellationToken = default);
     }
-
-    public sealed record PaymentIntentResult(
-        string PaymentIntentId,
-        string ClientSecret,
-        string Status,
-        string PublishableKey);
-
-    public sealed record StripeWebhookEvent(
-        string EventType,
-        string PaymentIntentId);
 }

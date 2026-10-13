@@ -3,6 +3,7 @@ using ECommerce.Domain.Errors;
 using ECommerce.Domain.Repositories;
 using ECommerce.Domain.Shared;
 using ECommerce.UseCases.Abstractions;
+using ECommerce.UseCases.Commons.DTOs;
 using ECommerce.UseCases.Commons.Options;
 using ECommerce.UseCases.Features.Orders.Specifications;
 using Microsoft.Extensions.Logging;

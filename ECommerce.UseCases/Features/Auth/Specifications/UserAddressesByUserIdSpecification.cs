@@ -11,7 +11,7 @@ public sealed class UserAddressesByUserIdSpecification
     {
         Query
             .Where(a => a.ApplicationUserId == userId)
-            .OrderByDescending(a => a.IsDefault)
+            .OrderByDescending(a => a.CreatedAt)
             .ThenBy(a => a.Label);
 
         Query.Select(a => new UserAddressResponse(

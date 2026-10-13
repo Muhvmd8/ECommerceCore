@@ -5,7 +5,6 @@ using ECommerce.UseCases.Features.Products.Queries.GetAllProducts;
 using ECommerce.UseCases.Features.Products.Queries.GetProductById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OutputCaching;
 namespace ECommerce.API.Controllers;
 public class ProductsController(IMediator mediator) : ApiController
 {
@@ -17,7 +16,7 @@ public class ProductsController(IMediator mediator) : ApiController
     }
 
     [HttpGet("paged")]
-    [OutputCache(Duration = 60, Tags = ["Products"])]
+    //[OutputCache(Duration = 60, Tags = ["Products"])]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<GetAllProductsResponse>>>> GetAllProducts(
         [FromQuery] GetAllPaginatedProductsQuery query,
         CancellationToken ct = default)

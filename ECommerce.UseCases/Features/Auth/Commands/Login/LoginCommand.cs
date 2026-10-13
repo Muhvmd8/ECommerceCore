@@ -4,6 +4,6 @@ using MediatR;
 
 namespace ECommerce.UseCases.Features.Auth.Commands.Login
 {
-    public record LoginCommand(string Email, string Password)
+    public sealed record LoginCommand(string Email, string Password)
         : IRequest<Result<LoginResponse>>;
 }

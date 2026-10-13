@@ -2,9 +2,10 @@
 using ECommerce.Domain.Repositories;
 using ECommerce.Domain.Settings;
 using ECommerce.Infrastructure.Caching;
-using ECommerce.Infrastructure.Email.Services;
+using ECommerce.Infrastructure.Email;
 using ECommerce.Infrastructure.Identity;
 using ECommerce.Infrastructure.Identity.Services;
+using ECommerce.Infrastructure.Notifications;
 using ECommerce.Infrastructure.Payments;
 using ECommerce.Infrastructure.Persistence.DbContexts;
 using ECommerce.Infrastructure.Persistence.Interceptors;
@@ -76,6 +77,7 @@ public static class DependencyInjection
         services.AddScoped(typeof(IReadRepository<>), typeof(Repository<>));
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IEmailStore, EmailStore>();
 
         return services;
     }
@@ -87,6 +89,7 @@ public static class DependencyInjection
         services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
         services.Configure<StripeSettings>(configuration.GetSection(StripeSettings.SectionName));
         services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.SectionName));
+        services.Configure<OtpSettings>(configuration.GetSection(OtpSettings.SectionName));
 
         return services;
     }
@@ -94,6 +97,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IDataSeeder, BrandSeeder>();
         services.AddScoped<IDataSeeder, TypeSeeder>();
+        services.AddScoped<IDataSeeder, ProductSeeder>();
         services.AddScoped<IDataSeeder, IdentitySeeder>();
         services.AddScoped<IDataSeeder, DeliveryMethodSeeder>();
         services.AddScoped<DatabaseSeeder>();
@@ -111,12 +115,23 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IPaymentService, StripePaymentService>();
         services.AddScoped<IAttachmentService, AttachmentService>();
+        services.AddScoped<INotificationCommandService, NotificationCommandService>();
+        services.AddScoped<INotificationQueryService, NotificationQueryService>();
 
         return services;
     }
     private static IServiceCollection _AddCachingServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<CacheEntryPolicy>(configuration.GetSection(CacheEntryPolicy.SectionName));
+        services
+            .AddOptions<CacheEntryPolicy>("Basket")
+            .BindConfiguration("CachedAggregate:Basket")
+            .ValidateOnStart();
+
+        services
+            .AddOptions<CacheEntryPolicy>("EmailVerificationCode")
+            .BindConfiguration("CachedAggregate:EmailVerificationCode")
+            .ValidateOnStart();
+
         services.AddSingleton<IValidateOptions<CacheEntryPolicy>, CacheEntryPolicyValidator>();
 
         var redisConnection = configuration.GetConnectionString("RedisConnection");

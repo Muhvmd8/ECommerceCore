@@ -34,4 +34,8 @@
     <ProjectReference Include="..\ECommerce.UseCases\ECommerce.UseCases.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\Products\" />
+  </ItemGroup>
+
 </Project>

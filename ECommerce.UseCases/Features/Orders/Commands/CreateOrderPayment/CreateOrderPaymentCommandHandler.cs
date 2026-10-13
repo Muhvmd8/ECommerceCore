@@ -1,8 +1,10 @@
+using ECommerce.Domain.Entities.NotificationModule;
 using ECommerce.Domain.Entities.OrderModule;
 using ECommerce.Domain.Errors;
 using ECommerce.Domain.Repositories;
 using ECommerce.Domain.Shared;
 using ECommerce.UseCases.Abstractions;
+using ECommerce.UseCases.Commons.DTOs;
 using ECommerce.UseCases.Commons.Options;
 using ECommerce.UseCases.Features.Orders.Dtos;
 using ECommerce.UseCases.Features.Orders.Specifications;
@@ -16,7 +18,9 @@ public sealed class CreateOrderPaymentCommandHandler(
     IRepository<Order> orderRepository,
     IUnitOfWork unitOfWork,
     IPaymentService paymentService,
+    INotificationCommandService notificationService,
     IOptions<StripeSettings> stripeOptions)
+
     : IRequestHandler<CreateOrderPaymentCommand, Result<PaymentClientSecretResponse>>
 {
     public async Task<Result<PaymentClientSecretResponse>> Handle(
@@ -68,6 +72,15 @@ public sealed class CreateOrderPaymentCommandHandler(
 
         orderRepository.Update(order);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await notificationService.SendAsync(
+            new NotificationCreateDto
+            {
+                Type = NotificationType.PaymentIntentCreated,
+                Message = $"Payment intent for order {order.Id} has been created.",
+                UserId = currentUser.UserId.Value
+            },
+            cancellationToken);
 
         var value = intentResult.Value;
         return Result<PaymentClientSecretResponse>.Success(

@@ -3,6 +3,6 @@ using MediatR;
 
 namespace ECommerce.UseCases.Features.Auth.Commands.VerifyRegistrationOtp
 {
-    public record VerifyRegistrationOtpCommand(string Email, string Otp)
+    public sealed record VerifyRegistrationOtpCommand(string Email, string Otp)
         : IRequest<Result>;
 }

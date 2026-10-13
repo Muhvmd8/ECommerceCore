@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using ECommerce.API.Filters;
 using ECommerce.API.Middlewares;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -73,6 +74,9 @@ public static class DependencyInjection
 
         services.AddProblemDetails();
         services.AddScoped<GlobalExceptionMiddleware>();
+
+        services.AddScoped<AuditActionFilter>();
+        services.AddScoped<AuditEndpointFilter>();
 
         return services;
     }

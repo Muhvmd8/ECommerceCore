@@ -50,11 +50,13 @@ namespace ECommerce.Infrastructure.Identity.Migrations
 
                     b.Property<string>("JwtId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -63,42 +65,12 @@ namespace ECommerce.Infrastructure.Identity.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("RefreshToken");
-                });
+                    b.HasIndex("JwtId");
 
-            modelBuilder.Entity("ECommerce.Infrastructure.Email.EmailVerificationCode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
+                    b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("EmailVerificationCode");
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("ECommerce.Infrastructure.Identity.ApplicationRole", b =>
@@ -148,7 +120,8 @@ namespace ECommerce.Infrastructure.Identity.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -200,7 +173,7 @@ namespace ECommerce.Infrastructure.Identity.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("ApplicationUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -315,17 +288,6 @@ namespace ECommerce.Infrastructure.Identity.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ECommerce.Infrastructure.Email.EmailVerificationCode", b =>
-                {
-                    b.HasOne("ECommerce.Infrastructure.Identity.ApplicationUser", "ApplicationUser")
-                        .WithOne("EmailVerificationCode")
-                        .HasForeignKey("ECommerce.Infrastructure.Email.EmailVerificationCode", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("ECommerce.Infrastructure.Identity.ApplicationRole", null)
@@ -379,9 +341,6 @@ namespace ECommerce.Infrastructure.Identity.Migrations
 
             modelBuilder.Entity("ECommerce.Infrastructure.Identity.ApplicationUser", b =>
                 {
-                    b.Navigation("EmailVerificationCode")
-                        .IsRequired();
-
                     b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618

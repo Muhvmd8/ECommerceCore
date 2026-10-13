@@ -18,6 +18,9 @@
     <EmbeddedResource Include="Persistence\Seeding\Data\types.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+	<EmbeddedResource Include="Persistence\Seeding\Data\products.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +46,7 @@
 	<PackageReference Include="MailKit" Version="4.18.1" />
 	<PackageReference Include="MimeKit" Version="4.18.1" />
 	<PackageReference Include="Stripe.net" Version="48.1.0" />
+	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>

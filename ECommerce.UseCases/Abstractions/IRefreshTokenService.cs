@@ -1,9 +1,8 @@
 ﻿using ECommerce.Domain.Shared;
+using ECommerce.UseCases.Commons.DTOs;
 
 namespace ECommerce.UseCases.Abstractions
 {
-    public sealed record RefreshTokenInfo(Guid UserId, string JwtId);
-    public sealed record RefreshTokenResult(string Token, DateTime ExpiresAtUtc);
     public interface IRefreshTokenService
     {
         Task<Result<RefreshTokenResult>> GenerateAsync(

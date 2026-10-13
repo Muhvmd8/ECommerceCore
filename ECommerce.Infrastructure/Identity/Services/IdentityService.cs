@@ -13,67 +13,57 @@ namespace ECommerce.Infrastructure.Identity.Services
         IEmailVerificationService emailVerificationService)
         : IIdentityService
     {
+
         public async Task<Result<AuthUserSnapshot>> CreateUserAsync(
             string email,
             string password,
             string? displayName,
             CancellationToken cancellationToken = default)
         {
-            var existingUser = await userManager.FindByEmailAsync(email);
-
-            if (existingUser is not null)
-            {
-                if (existingUser.EmailConfirmed)
-                    return Result<AuthUserSnapshot>.Failure(IdentityErrors.EmailAlreadyExists);
-
-                var verificationCodeResult = await ResendVerificationAsync(email, cancellationToken);
-                if (verificationCodeResult.IsFailure)
-                    return Result<AuthUserSnapshot>.Failure(verificationCodeResult.Error!);
-
-                return Result<AuthUserSnapshot>.Failure(IdentityErrors.EmailNotConfirmed);
-            }
+            email = email.Trim();
 
             var user = new ApplicationUser
             {
                 UserName = email,
                 Email = email,
-                DisplayName = displayName!
+                DisplayName = displayName?.Trim() ?? string.Empty
             };
 
-            var result = await userManager.CreateAsync(user, password);
-
-            if (!result.Succeeded)
+            var createResult = await userManager.CreateAsync(user, password);
+            if (!createResult.Succeeded)
             {
-                if (result.Errors.Any(e =>
+                if (createResult.Errors.Any(e =>
                     e.Code is "DuplicateEmail" or "DuplicateUserName"))
+                {
                     return Result<AuthUserSnapshot>.Failure(IdentityErrors.EmailAlreadyExists);
+                }
 
                 var message = string.Join(
                     ", ",
-                    result.Errors.Select(e => e.Description));
+                    createResult.Errors.Select(e => e.Description));
 
-                return Result<AuthUserSnapshot>.Failure(IdentityErrors.CreateFailed(message));
+                return Result<AuthUserSnapshot>.Failure(
+                    IdentityErrors.CreateFailed(message));
             }
 
             var roleResult = await userManager.AddToRoleAsync(user, Roles.User);
 
             if (!roleResult.Succeeded)
             {
-                var message = string.Join(
-                    ", ",
-                    roleResult.Errors.Select(e => e.Description));
-
+                // Compensate for a partially completed registration.
+                await userManager.DeleteAsync(user);
+                var message = string.Join(", ", roleResult.Errors.Select(e => e.Description));
                 return Result<AuthUserSnapshot>.Failure(IdentityErrors.CreateFailed(message));
             }
 
-            var snapshot = new AuthUserSnapshot(
-                user.Id,
-                user.Email!,
-                user.DisplayName,
-                user.EmailConfirmed);
-
-            return Result<AuthUserSnapshot>.Success(snapshot);
+            return Result<AuthUserSnapshot>.Success(
+                new AuthUserSnapshot(
+                    user.Id,
+                    user.Email!,
+                    user.DisplayName,
+                    user.EmailConfirmed));
         }
+
 
         public async Task<Result<AuthUserSnapshot>> ValidateCredentialsAsync(
             string email,

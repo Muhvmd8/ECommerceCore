@@ -7,7 +7,7 @@ namespace ECommerce.Infrastructure.Persistence.Seeding.Implementation
 {
     public sealed class DeliveryMethodSeeder(ApplicationDbContext dbContext) : IDataSeeder
     {
-        public int Order => 3;
+        public int Order => 4;
 
         public async Task SeedDataAsync(CancellationToken ct = default)
         {

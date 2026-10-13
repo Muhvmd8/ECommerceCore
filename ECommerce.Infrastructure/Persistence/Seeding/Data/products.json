@@ -1,0 +1,82 @@
+[
+  {
+    "name": "iPhone 15 Pro",
+    "description": "Titanium smartphone with A17 Pro chip and a 48MP main camera.",
+    "price": 54999.0,
+    "pictureUrl": "product1.png",
+    "brandId": 1,
+    "typeId": 1
+  },
+  {
+    "name": "Galaxy S24 Ultra",
+    "description": "Flagship smartphone with a built-in S Pen and 200MP camera.",
+    "price": 57999.0,
+    "pictureUrl": "product2.png",
+    "brandId": 2,
+    "typeId": 1
+  },
+  {
+    "name": "Xperia 1 V",
+    "description": "4K OLED smartphone with pro-level camera controls.",
+    "price": 49999.0,
+    "pictureUrl": "product3.png",
+    "brandId": 3,
+    "typeId": 1
+  },
+  {
+    "name": "MacBook Air M2",
+    "description": "Thin and light laptop with the Apple M2 chip and all-day battery.",
+    "price": 52999.0,
+    "pictureUrl": "product4.png",
+    "brandId": 1,
+    "typeId": 2
+  },
+  {
+    "name": "XPS 13",
+    "description": "Compact premium ultrabook with an InfinityEdge display.",
+    "price": 59999.0,
+    "pictureUrl": "product5.png",
+    "brandId": 6,
+    "typeId": 2
+  },
+  {
+    "name": "Pavilion 15",
+    "description": "Everyday laptop with a 15.6-inch Full HD display.",
+    "price": 27999.0,
+    "pictureUrl": "product6.png",
+    "brandId": 7,
+    "typeId": 2
+  },
+  {
+    "name": "ThinkPad X1 Carbon",
+    "description": "Ultra-light business laptop with a legendary keyboard.",
+    "price": 64999.0,
+    "pictureUrl": "product7.png",
+    "brandId": 8,
+    "typeId": 2
+  },
+  {
+    "name": "Galaxy Book4 Pro",
+    "description": "AMOLED laptop with a slim design and Intel Core Ultra processor.",
+    "price": 58999.0,
+    "pictureUrl": "product8.png",
+    "brandId": 2,
+    "typeId": 2
+  },
+  {
+    "name": "iPad Air",
+    "description": "10.9-inch tablet with the M1 chip and Apple Pencil support.",
+    "price": 24999.0,
+    "pictureUrl": "product9.png",
+    "brandId": 1,
+    "typeId": 3
+  },
+  {
+    "name": "Galaxy Tab S9",
+    "description": "11-inch AMOLED tablet with an S Pen included.",
+    "price": 29999.0,
+    "pictureUrl": "product10.png",
+    "brandId": 2,
+    "typeId": 3
+  }
+]

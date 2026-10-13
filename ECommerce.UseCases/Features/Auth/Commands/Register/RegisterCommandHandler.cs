@@ -5,6 +5,7 @@ using MediatR;
 
 namespace ECommerce.UseCases.Features.Auth.Commands.Register
 {
+
     public sealed class RegisterCommandHandler(
         IIdentityService identityService,
         IEmailVerificationService emailVerificationService)
@@ -14,29 +15,39 @@ namespace ECommerce.UseCases.Features.Auth.Commands.Register
             RegisterCommand request,
             CancellationToken cancellationToken)
         {
-            var result = await identityService.CreateUserAsync(
-                request.Email,
+            var email = request.Email.Trim();
+
+            var createResult = await identityService.CreateUserAsync(
+                email,
                 request.Password,
                 request.DisplayName,
                 cancellationToken);
 
-            if (result.IsFailure)
-                return Result<RegisterResponse>.Failure(result.Error!);
+            if (createResult.IsFailure)
+            {
+                return Result<RegisterResponse>.Failure(
+                    createResult.Error!);
+            }
 
-            var newVerificationResult =
+            var user = createResult.Value;
+
+            var verificationResult =
                 await emailVerificationService.SendRegistrationCodeAsync(
-                    result.Value.UserId,
-                    result.Value.Email,
+                    user.UserId,
+                    user.Email,
                     cancellationToken);
 
-            if (newVerificationResult.IsFailure)
+            if (verificationResult.IsFailure)
+            {
                 return Result<RegisterResponse>.Failure(
-                    newVerificationResult.Error!);
+                    verificationResult.Error!);
+            }
 
             return Result<RegisterResponse>.Success(
                 new RegisterResponse(
-                    result.Value.UserId.ToString(),
-                    result.Value.Email));
+                    user.UserId.ToString(),
+                    user.Email));
         }
     }
+
 }

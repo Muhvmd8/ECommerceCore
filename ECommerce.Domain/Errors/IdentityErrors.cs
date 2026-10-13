@@ -22,7 +22,7 @@ namespace ECommerce.Domain.Errors
         public static readonly Error EmailNotConfirmed =
             Error.Validation(
                 "Identity.EmailNotConfirmed",
-                "Email address has not been confirmed.");
+                "Email address has not been confirmed, otp code sent successfully.");
 
         public static readonly Error InvalidVerification =
             Error.Validation(
