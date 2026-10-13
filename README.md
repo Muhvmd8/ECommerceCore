@@ -424,9 +424,6 @@ A dedicated attribute filter handles repeated buyer-ID logic in one place. This 
 
 An authorization filter protects the Serilog UI dashboard so access is checked before users can view operational logs. The dashboard should remain restricted in production and should not be exposed publicly without appropriate access controls.
 
-<img width="1894" height="942" alt="image" src="https://github.com/user-attachments/assets/85ec749c-f121-4eca-b065-659aa976fbcc" />
-
-
 ## Authentication and Authorization
 
 Authentication uses **ASP.NET Core Identity and JWT bearer tokens**. Identity-related work is accessed through application abstractions where appropriate, keeping the use-case layer decoupled from direct `UserManager` or `RoleManager` usage.
@@ -442,56 +439,6 @@ The authentication workflows include:
 
 Logout should revoke or invalidate the relevant refresh-token state. A JWT access token that has already been issued usually remains valid until expiration unless the application implements an additional access-token revocation mechanism.
 
-```mermaid
-flowchart TD
-    A([Start]) --> B[Register]
-    B --> C[Create User Account]
-    C --> D[Send Email Verification Code]
-    D --> E[Verify Email]
-    E --> F{Verification Successful?}
-
-    F -- No --> G[Return Verification Error]
-    G --> D
-    F -- Yes --> H[Account Verified]
-
-    H --> I[Login]
-    I --> J{Credentials Valid?}
-
-    J -- No --> K[Return Authentication Error]
-    K --> I
-
-    J -- Yes --> L[Generate JWT Access Token]
-    L --> M[Generate Refresh Token]
-    M --> N[Return Tokens to Client]
-
-    N --> O{Access Token Expired?}
-    O -- No --> P[Access Protected Endpoint]
-    P --> Q{Authorized?}
-    Q -- No --> R[Return 403 Forbidden]
-    Q -- Yes --> S[Execute Request]
-
-    O -- Yes --> T[Submit Refresh Token]
-    T --> U{Refresh Token Valid?}
-    U -- No --> V[Require Login]
-    U -- Yes --> W[Issue New Access Token]
-    W --> X[Rotate Refresh Token]
-    X --> N
-
-    N --> Y[Logout]
-    Y --> Z[Revoke Refresh Token]
-    Z --> AA([End])
-
-    classDef process fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
-    classDef decision fill:#fef3c7,stroke:#d97706,color:#78350f
-    classDef error fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
-    classDef success fill:#dcfce7,stroke:#16a34a,color:#14532d
-
-    class B,C,D,E,I,L,M,N,P,T,W,X,Y,Z process
-    class F,J,O,Q,U decision
-    class G,K,R,V error
-    class H,S success
-```
-
 ## Basket Module
 
 The basket module supports **guest users as well as authenticated users**. A customer can add items before creating an account or logging in, with basket state stored in Redis.
@@ -500,7 +447,35 @@ After login or registration, the guest basket can be merged with the user's bask
 
 Redis is a suitable fit for this kind of data because basket state is frequently accessed and can have a configurable lifetime. The basket workflow still needs to validate product availability, quantities, and prices against trusted server-side data when creating an order.
 
-![Guest basket and basket merge flow](docs/images/basket-guest-merge.png)
+```mermaid
+flowchart TD
+    A([Customer]) --> B[Add Products to Basket]
+    B --> C[(Redis Basket)]
+
+    C --> D{Authenticated?}
+
+    D -- No --> E[Continue as Guest]
+    E --> F[Login or Register]
+
+    D -- Yes --> G[Load User Basket]
+    F --> H[Merge Guest Basket with User Basket]
+    H --> I[Validate Products and Quantities]
+    I --> J[(Updated Redis Basket)]
+    G --> J
+
+    J --> K[Checkout]
+    K --> L[Validate Current Prices and Availability]
+    L --> M[Create Order]
+
+    classDef process fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef storage fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef decision fill:#fef3c7,stroke:#d97706,color:#78350f
+
+    class B,E,F,G,H,I,K,L,M process
+    class C,J storage
+    class D decision
+```
+
 
 ## Caching Strategy
 
@@ -527,8 +502,6 @@ Cache policies and TTL settings are held in typed options rather than spread acr
 
 The exact lifetime and expiration policy should be selected based on how quickly the data changes and how stale a response is allowed to be.
 
-![Caching strategy: Redis, Output Caching, HybridCache, and TTL policies](docs/images/caching-strategy.png)
-
 ## Orders and Stripe Payments
 
 ### Order features
@@ -543,8 +516,6 @@ Idempotency helps prevent duplicate processing of payment-related operations. We
 
 Notifications are sent for relevant order-creation and payment events.
 
-![Order creation, Stripe Payment Intent, webhook, and notification flow](docs/images/order-payment-flow.png)
-
 ## Notifications and SignalR
 
 The notification module combines **database persistence** with **real-time delivery through SignalR**.
@@ -555,8 +526,6 @@ The notification module combines **database persistence** with **real-time deliv
 - Relevant business events, including order creation and payment events, trigger notifications.
 
 Persisted notifications and real-time delivery solve different problems: the database preserves notification history, while SignalR delivers immediate updates to currently connected clients.
-
-![SignalR hub and notifications](docs/images/signalr-notifications.png)
 
 ## Email and Verification Codes
 
@@ -571,19 +540,13 @@ Separating message construction from message delivery makes templates easier to 
 
 Never include real verification codes or credentials in screenshots or logs.
 
-![Email template with branding and logo](docs/images/email-template-logo.png)
-
-![Email message builder and attachment handling](docs/images/email-message-builder-attachments.png)
-
-![Verification code stored in Redis](docs/images/verification-code-redis.png)
+<img width="746" height="731" alt="image" src="https://github.com/user-attachments/assets/949cbbf9-c474-4452-a4ca-f76b2dcaf6e7" />
 
 ## Cloudinary Integration
 
 Cloudinary is integrated through a dedicated attachment/file service. This separates media storage from the main relational database and allows the application to store an asset reference or URL with the related business data.
 
 The upload workflow should validate file size and type, apply appropriate access rules, and avoid trusting client-provided file metadata without validation.
-
-![Cloudinary integration or uploaded asset dashboard](docs/images/cloudinary-integration.png)
 
 ## IP Security and Rate Limiting
 
@@ -602,10 +565,6 @@ Custom IP security middleware checks requests against the application's configur
 
 These checks provide an additional layer of defense. Pattern-based payload inspection does not replace parameterized SQL queries, proper input validation, output encoding, authentication, authorization, or other framework security practices.
 
-![IP security middleware](docs/images/ip-security-middleware.png)
-
-![Security schema: LoginAudits and BlockedIps](docs/images/security-schema-login-audits-blocked-ips.png)
-
 ## Configuration Encryption and Decryption
 
 The project includes a configuration provider designed to decrypt protected configuration values when the application loads configuration.
@@ -621,8 +580,6 @@ At a high level, the flow is:
 
 The key must not be stored beside the encrypted values or committed to source control. For production, use a trusted secret store or hosting-platform secret settings when available. Never show real secrets or keys in README screenshots.
 
-![Encrypted configuration and custom provider](docs/images/configuration-encryption-provider.png)
-
 ## Logging with Serilog
 
 Serilog provides structured application logging, with log records stored in SQL Server. Structured logs make it easier to search for events and investigate application behavior.
@@ -631,9 +588,40 @@ The Serilog UI dashboard provides a user interface for viewing and querying stor
 
 Logs must not contain passwords, access or refresh tokens, verification codes, encryption keys, or other secrets.
 
-![Serilog UI dashboard](docs/images/serilog-ui-dashboard.png)
+<img width="1894" height="942" alt="image" src="https://github.com/user-attachments/assets/85ec749c-f121-4eca-b065-659aa976fbcc" />
 
-![Serilog configuration and SQL Server log storage](docs/images/serilog-sqlserver-logging.png)
+```
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.MSSqlServer" ],
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning",
+        "Microsoft.AspNetCore": "Warning",
+        "Microsoft.EntityFrameworkCore": "Warning",
+        "Microsoft.EntityFrameworkCore.Database.Command": "Error"
+      }
+    },
+    "WriteTo": [
+      { "Name": "Console" },
+      {
+        "Name": "MSSqlServer",
+        "Args": {
+          "connectionString": "Server=db72658.public.databaseasp.net; Database=db72658; User Id=db72658; Password=Muhvmd_44; Encrypt=True;",
+          "tableName": "Logs",
+          "schemaName": "Logging",
+          "autoCreateSqlTable": true
+        }
+      }
+    ],
+    "Enrich": [
+      "FromLogContext",
+      "WithMachineName",
+      "WithThreadId"
+    ]
+  }
+```
 
 ## Options and Configuration Validation
 
@@ -649,13 +637,9 @@ CORS is configured through an explicit policy that lists allowed origins, header
 
 When `AllowCredentials()` is enabled, do not use a wildcard origin. Keep the allowed-origin list narrow, and configure production frontend origins deliberately instead of leaving development origins as the only allowed values.
 
-![CORS policy configuration](docs/images/cors-configuration.png)
-
 ## Seeding
 
 Seed data is handled through a dedicated module so that initialization logic is not scattered across unrelated persistence code. This makes it easier to add or adjust required default data as the application evolves.
-
-![Seeding module](docs/images/seeding-module.png)
 
 ## Cancellation Tokens
 
@@ -691,8 +675,6 @@ public void Domain_Should_Not_Depend_On_Any_Other_Project()
 This type of test makes architectural decisions executable. If a future change introduces a forbidden dependency, the test can fail and highlight the types that violate the boundary.
 
 Architecture tests are currently in place, and unit-test coverage for individual use cases and business rules can continue to expand.
-
-![Architecture tests and successful test run](docs/images/architecture-tests-xunit.png)
 
 ## Features Summary
 
