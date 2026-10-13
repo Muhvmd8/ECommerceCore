@@ -350,8 +350,6 @@ Soft deletion is applied according to the entity's business and retention requir
 
 The project has a seeding module for initializing required data. Keeping seeding logic organized separately makes it easier to maintain and extend as new entities or default records are introduced.
 
-![EF Core configuration, interceptors, filters, or seeding](docs/images/efcore-interceptors-filters-seeding.png)
-
 ## API Response Structure
 
 The API uses a unified response shape for successful responses and relevant metadata. The response structure includes:
@@ -388,7 +386,7 @@ Example shape:
 
 The example illustrates the intended shape; actual messages and payloads depend on the endpoint. For consistency, the API should ensure that `Meta` and `TraceId` are populated by the response-building path, including when handling errors.
 
-![API response structure screenshot](docs/images/api-response-structure.png)
+<img width="1295" height="440" alt="image" src="https://github.com/user-attachments/assets/105bbc7a-15c3-4158-be70-82ad34d84d0d" />
 
 ## Result Pattern and Problem Details
 
@@ -400,7 +398,7 @@ A global exception handler handles unexpected exceptions, while **Problem Detail
 
 This separates expected business failures from unexpected application errors and gives clients a more predictable API contract.
 
-![Result Pattern and Problem Details](docs/images/result-problem-details.png)
+<img width="1288" height="198" alt="image" src="https://github.com/user-attachments/assets/0a2e98c8-d62b-4f46-8cff-0f017bc59cf1" />
 
 ## Minimal APIs, API Versioning, and Filters
 
@@ -444,7 +442,55 @@ The authentication workflows include:
 
 Logout should revoke or invalidate the relevant refresh-token state. A JWT access token that has already been issued usually remains valid until expiration unless the application implements an additional access-token revocation mechanism.
 
-![Authentication flow](docs/images/authentication-flow.png)
+```mermaid
+flowchart TD
+    A([Start]) --> B[Register]
+    B --> C[Create User Account]
+    C --> D[Send Email Verification Code]
+    D --> E[Verify Email]
+    E --> F{Verification Successful?}
+
+    F -- No --> G[Return Verification Error]
+    G --> D
+    F -- Yes --> H[Account Verified]
+
+    H --> I[Login]
+    I --> J{Credentials Valid?}
+
+    J -- No --> K[Return Authentication Error]
+    K --> I
+
+    J -- Yes --> L[Generate JWT Access Token]
+    L --> M[Generate Refresh Token]
+    M --> N[Return Tokens to Client]
+
+    N --> O{Access Token Expired?}
+    O -- No --> P[Access Protected Endpoint]
+    P --> Q{Authorized?}
+    Q -- No --> R[Return 403 Forbidden]
+    Q -- Yes --> S[Execute Request]
+
+    O -- Yes --> T[Submit Refresh Token]
+    T --> U{Refresh Token Valid?}
+    U -- No --> V[Require Login]
+    U -- Yes --> W[Issue New Access Token]
+    W --> X[Rotate Refresh Token]
+    X --> N
+
+    N --> Y[Logout]
+    Y --> Z[Revoke Refresh Token]
+    Z --> AA([End])
+
+    classDef process fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef decision fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef error fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+    classDef success fill:#dcfce7,stroke:#16a34a,color:#14532d
+
+    class B,C,D,E,I,L,M,N,P,T,W,X,Y,Z process
+    class F,J,O,Q,U decision
+    class G,K,R,V error
+    class H,S success
+```
 
 ## Basket Module
 
