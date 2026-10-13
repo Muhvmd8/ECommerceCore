@@ -80,13 +80,14 @@ The Use Cases layer defines abstractions for services such as payment processing
 
 **Architecture diagram**
 
-![Architecture diagram](docs/images/architecture-diagram.png)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/64952535-378d-4b52-a507-7fab68016d21" />
+
 
 **Domain dependency boundaries**
 
 The domain project should not depend on Use Cases, Infrastructure, or API. Keeping this boundary clean allows core business rules to remain independent from web frameworks, databases, and external services.
 
-![Domain dependency boundaries](docs/images/domain-dependency-boundaries.png)
+<img width="963" height="486" alt="image" src="https://github.com/user-attachments/assets/f4d45660-1ff1-4a91-adcd-c150fc039c30" />
 
 ## Domain Models and Rich Domain Model
 
@@ -98,7 +99,7 @@ Domain models are designed around business concepts and application actions, whi
 
 **Rich Domain Model code screenshot**
 
-![Rich Domain Model example](docs/images/rich-domain-model.png)
+<img width="956" height="882" alt="image" src="https://github.com/user-attachments/assets/5f81b50a-cd58-4618-b3bd-69cee63e9b15" />
 
 ## CQRS, MediatR, and FluentValidation
 
@@ -116,7 +117,7 @@ A typical flow is:
 
 `Minimal API endpoint → MediatR → validation → command/query handler → domain/services/repositories`
 
-![CQRS and MediatR diagram](docs/images/cqrs-mediatr-diagram.png)
+<img width="982" height="279" alt="image" src="https://github.com/user-attachments/assets/4185c8d7-27cf-42b6-a805-038482463501" />
 
 ## Specification, Builder, and Evaluator
 
@@ -126,7 +127,7 @@ The project implements its own specification approach rather than relying entire
 
 This keeps complex query composition out of endpoint handlers and encourages reusable, testable query definitions.
 
-![Custom Specification, Builder, and Evaluator](docs/images/specification-builder-evaluator.png)
+<img width="924" height="646" alt="image" src="https://github.com/user-attachments/assets/d7bf8eb3-bdfa-45d5-9840-7c77cbb4e68b" />
 
 ## Repositories and Unit of Work
 
@@ -138,7 +139,9 @@ The data-access layer separates reading from writing:
 
 The solution also contains purpose-specific abstractions where needed, such as basket and email-code storage interfaces. These interfaces let application workflows depend on the operation they need instead of a concrete persistence implementation.
 
-![Read and Write Repository structure](docs/images/read-write-repositories.png)
+<img width="920" height="318" alt="image" src="https://github.com/user-attachments/assets/d368bf4b-3488-4e3b-ad7e-bdc8f186ac06" />
+
+<img width="913" height="414" alt="image" src="https://github.com/user-attachments/assets/86114e8c-d6b3-41c5-94cf-11562478a489" />
 
 ## Database Design and EF Core
 
@@ -150,9 +153,147 @@ Database structure is designed around the application's main areas, including pr
 
 Indexes are used to support relevant lookup, filtering, and relationship queries. Index choices should follow actual query patterns and be reviewed with generated SQL and execution plans; indexes improve suitable queries but also add write and storage overhead.
 
-![Database design / ERD](docs/images/database-design.png)
+```mermaid
+erDiagram
+    APPLICATIONUSER ||--o{ REFRESHTOKEN : has
+    APPLICATIONUSER ||--o{ ORDER : places
+    APPLICATIONUSER ||--o{ NOTIFICATION : receives
+    APPLICATIONUSER ||--o{ USERADDRESS : has
 
-![Database indexes](docs/images/database-indexes.png)
+    ORDER ||--|{ ORDERITEM : contains
+    PRODUCT ||--o{ ORDERITEM : referenced_by
+
+    PRODUCTBRAND ||--o{ PRODUCT : categorizes
+    PRODUCTTYPE ||--o{ PRODUCT : categorizes
+
+    DELIVERYMETHOD ||--o{ ORDER : selected_for
+
+    APPLICATIONUSER {
+        guid id PK
+        string email
+        string displayName
+        string username
+        string phoneNumber
+    }
+
+    APPLICATIONROLE {
+        guid id PK
+        string name
+        string description
+    }
+
+    REFRESHTOKEN {
+        int id PK
+        guid applicationUserId FK
+        string token
+        string jwtId
+        boolean isRevoked
+        boolean isUsed
+        datetime expiresAt
+    }
+
+    ORDER {
+        guid id PK
+        guid userId FK
+        int status
+        guid deliveryMethodId FK
+        string deliveryMethodName
+        decimal deliveryMethodPrice
+        string shippingRecipientFirstName
+        string shippingRecipientLastName
+        string shippingPhoneNumber
+        string shippingCountry
+        string shippingCity
+        string shippingStreet
+        string shippingPostalCode
+        decimal subTotal
+        decimal shippingCost
+        decimal total
+        string paymentIntentId
+        datetime paidAtUtc
+    }
+
+    ORDERITEM {
+        guid id PK
+        guid orderId FK
+        int productId FK
+        string productName
+        string pictureUrl
+        decimal unitPrice
+        int quantity
+    }
+
+    PRODUCT {
+        int id PK
+        string name
+        string description
+        decimal price
+        string pictureUrl
+        int productBrandId FK
+        int productTypeId FK
+    }
+
+    PRODUCTBRAND {
+        int id PK
+        string name
+    }
+
+    PRODUCTTYPE {
+        int id PK
+        string name
+    }
+
+    DELIVERYMETHOD {
+        guid id PK
+        string name
+        string description
+        decimal price
+        string estimatedDeliveryTime
+        boolean isAvailable
+        int displayOrder
+    }
+
+    NOTIFICATION {
+        int id PK
+        guid applicationUserId FK
+        int type
+        string message
+        string dataJson
+        boolean isRead
+    }
+
+    USERADDRESS {
+        guid id PK
+        guid applicationUserId FK
+        string label
+        string country
+        string city
+        string street
+        string recipientFirstName
+        string recipientLastName
+        string phone
+        boolean isDefault
+    }
+
+    BLOCKEDIP {
+        int id PK
+        string ipAddress
+        string reason
+        datetime blockedAt
+        datetime expiresAt
+    }
+
+    LOGINAUDIT {
+        int id PK
+        string username
+        string ipAddress
+        string endpoint
+        string status
+        string requestBody
+    }
+```
+
+<img width="1099" height="733" alt="image" src="https://github.com/user-attachments/assets/3188cdfe-00ab-4be8-89cb-b28d4758eab0" />
 
 ### EF Core interceptors, global query filters, and soft delete
 
@@ -228,7 +369,7 @@ Most endpoints use **ASP.NET Core Minimal APIs**, with a small number of control
 
 API versioning makes the supported API contract explicit and provides a path for evolving endpoints without silently changing what existing clients rely on.
 
-![API versioning and Swagger documentation](docs/images/api-versioning-swagger.png)
+<img width="1882" height="854" alt="image" src="https://github.com/user-attachments/assets/5972b8d6-31bd-40f9-9ee1-13335bc16917" />
 
 ### Endpoint and action audit filters
 
@@ -241,6 +382,9 @@ A dedicated attribute filter handles repeated buyer-ID logic in one place. This 
 ### Serilog UI authorization filter
 
 An authorization filter protects the Serilog UI dashboard so access is checked before users can view operational logs. The dashboard should remain restricted in production and should not be exposed publicly without appropriate access controls.
+
+<img width="1894" height="942" alt="image" src="https://github.com/user-attachments/assets/85ec749c-f121-4eca-b065-659aa976fbcc" />
+
 
 ## Authentication and Authorization
 
