@@ -72,9 +72,9 @@ The solution separates responsibilities into projects for the domain, use cases,
 
 - **Domain:** entities, domain errors, shared domain abstractions, and paged-result models.
 - **Use Cases:** commands, queries, handlers, DTOs, validators, and abstractions for services implemented by infrastructure.
-- **Infrastructure:** database access, repositories, caching, email, payments, file storage, identity integrations, and other external services.
+- **Infrastructure:** database access, repositories, caching, email, payments, file storage in cloudinary, identity integrations, and other external services.
 - **API:** HTTP endpoints, API versioning, filters, middleware, authentication configuration, and response formatting.
-- **Architecture Tests:** automated checks that help enforce dependency boundaries.
+- **Architecture Tests:** automated checks that help enforce dependency boundaries and violation of clean architecture's rules.
 
 The Use Cases layer defines abstractions for services such as payment processing, notifications, JWT generation, current-user access, IP security, email sending, mail-message building, refresh tokens, and attachments. Infrastructure provides their implementations. This keeps use cases from depending directly on implementation details.
 
