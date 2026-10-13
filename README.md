@@ -59,6 +59,7 @@ The system includes product catalog features, guest and authenticated baskets, a
 | Data access | Read Repository, Write Repository, Unit of Work |
 | Query composition | Custom Specification Pattern, Builder Pattern, Specification Evaluator |
 | Authentication | ASP.NET Core Identity, JWT, refresh tokens |
+| Security | ASP.NET Core rate-limiting, Ip Security Middlewares, Decrypted Configuration Provider 
 | Integrations | Stripe, Cloudinary, email services |
 | Real-time messaging | SignalR |
 | Logging | Serilog, SQL Server log storage, Serilog UI dashboard |
