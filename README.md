@@ -153,6 +153,7 @@ Database structure is designed around the application's main areas, including pr
 
 Indexes are used to support relevant lookup, filtering, and relationship queries. Index choices should follow actual query patterns and be reviewed with generated SQL and execution plans; indexes improve suitable queries but also add write and storage overhead.
 
+# 1) SQl Server Schema
 ```mermaid
 erDiagram
     APPLICATIONUSER ||--o{ REFRESHTOKEN : has
@@ -293,7 +294,49 @@ erDiagram
     }
 ```
 
-<img width="1099" height="733" alt="image" src="https://github.com/user-attachments/assets/3188cdfe-00ab-4be8-89cb-b28d4758eab0" />
+# 2) Redis
+```mermaid
+graph TD
+    subgraph EmailVerification["Email Verification Module"]
+        EVCode["EmailVerificationCode"]
+        EVCode --> UserId["UserId: Guid"]
+        EVCode --> Code["Code: string"]
+        EVCode --> Purpose["Purpose: EmailVerificationPurpose"]
+        EVCode --> ExpirationTimeUtc["ExpirationTimeUtc: DateTimeOffset"]
+
+        Purpose --> PurposeEnum["EmailVerificationPurpose Enum"]
+        PurposeEnum --> Reg["Registration = 1"]
+        PurposeEnum --> PwdReset["PasswordReset = 2"]
+    end
+
+    subgraph BasketModule["Basket Module"]
+        Basket["Basket"]
+        BasketItem["BasketItem"]
+
+        Basket --> BuyerId["BuyerId: Guid"]
+        Basket --> Items["Items: List<BasketItem>"]
+        Basket --> TotalItems["TotalItems: int"]
+        Basket --> SubTotal["SubTotal: decimal"]
+
+        Items --> BasketItem
+        BasketItem --> ProductId["ProductId: int"]
+        BasketItem --> ProductName["ProductName: string"]
+        BasketItem --> PictureUrl["PictureUrl: string"]
+        BasketItem --> UnitPrice["UnitPrice: decimal"]
+        BasketItem --> Quantity["Quantity: int"]
+        BasketItem --> LineTotal["LineTotal: decimal"]
+    end
+
+    classDef emailModule stroke:#a78bfa,fill:#f5f3ff
+    classDef basketModule stroke:#2dd4bf,fill:#f0fdfa
+    classDef property stroke:#818cf8,fill:#eef2ff
+    classDef enum stroke:#fb923c,fill:#fff7ed
+
+    class EVCode emailModule
+    class Basket,BasketItem basketModule
+    class UserId,Code,Purpose,ExpirationTimeUtc,BuyerId,Items,TotalItems,SubTotal,ProductId,ProductName,PictureUrl,UnitPrice,Quantity,LineTotal property
+    class PurposeEnum,Reg,PwdReset enum
+```
 
 ### EF Core interceptors, global query filters, and soft delete
 
