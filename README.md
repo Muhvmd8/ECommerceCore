@@ -518,14 +518,44 @@ Notifications are sent for relevant order-creation and payment events.
 
 ## Notifications and SignalR
 
-The notification module combines **database persistence** with **real-time delivery through SignalR**.
+The notification module combines **database persistence with real-time delivery through SignalR**, allowing users to receive updates instantly while keeping their notification history available for later.
 
-- Notifications are persisted so users can access them after reconnecting or returning later.
-- SignalR hubs deliver updates to connected clients without requiring constant polling.
-- The module supports notification retrieval and management, including marking notifications as read and deleting them where implemented.
-- Relevant business events, including order creation and payment events, trigger notifications.
+### Notification Design
 
-Persisted notifications and real-time delivery solve different problems: the database preserves notification history, while SignalR delivers immediate updates to currently connected clients.
+Each notification contains the following properties:
+
+- **`ApplicationUserId`**: Identifies the user who receives the notification.
+- **`Type`**: Defines the notification category, allowing the client to handle different notification types appropriately.
+- **`Message`**: Contains the notification text displayed to the user.
+- **`DataJson`**: An optional JSON payload containing contextual data related to the notification.
+- **`IsRead`**: Tracks whether the user has read the notification.
+
+### Contextual Data with `DataJson`
+
+Instead of limiting notifications to plain text, I added `DataJson` to carry additional information about the related business entity.
+
+For example, an order notification can include an `OrderId`, while a user-related notification can include a `UserId`. The frontend can deserialize this payload and use the provided identifier to navigate directly to the relevant order details or user profile.
+
+This keeps the notification model flexible without requiring additional database columns for every possible notification context.
+
+**Example payload for an order notification:**
+
+```json
+{
+  "orderId": 125,
+  "action": "view-order"
+}
+```
+
+The frontend can use `orderId` to navigate to the corresponding order details page when the user clicks the notification.
+
+### Real-Time Delivery
+
+SignalR delivers notifications to connected clients as relevant business events occur, such as order creation or payment updates. Notifications are also persisted in the database, so users can retrieve them later, even if they were offline when the event occurred.
+
+The module supports retrieving notifications, tracking unread notifications, marking individual or all notifications as read, and deleting notifications where implemented.
+
+By combining persistent storage, contextual payloads, and real-time delivery, the module provides a flexible notification mechanism that can be extended to support additional business events without redesigning the notification entity.
 
 ## Email and Verification Codes
 
@@ -547,6 +577,8 @@ Never include real verification codes or credentials in screenshots or logs.
 Cloudinary is integrated through a dedicated attachment/file service. This separates media storage from the main relational database and allows the application to store an asset reference or URL with the related business data.
 
 The upload workflow should validate file size and type, apply appropriate access rules, and avoid trusting client-provided file metadata without validation.
+
+<img width="922" height="840" alt="image" src="https://github.com/user-attachments/assets/2986996d-a51c-4818-9d6d-0b4f221e390e" />
 
 ## IP Security and Rate Limiting
 
@@ -631,6 +663,12 @@ The project uses FluentValidation validators for supported options/settings thro
 
 The same options approach is used for settings such as cache TTL and cache-entry policies. `IOptionsMonitor<T>` is useful when consumers need access to current values or supported configuration-change notifications.
 
+# - Configurations Example
+<img width="510" height="232" alt="image" src="https://github.com/user-attachments/assets/68ea7104-f15a-4848-8eb0-f452e65e4af7" />
+
+# - Validator Example
+<img width="661" height="485" alt="image" src="https://github.com/user-attachments/assets/4cfff1e2-c670-43ce-acbe-03c0179d10d4" />
+
 ## CORS
 
 CORS is configured through an explicit policy that lists allowed origins, headers, methods, and credential behavior. The configured origins must match the actual frontend environments.
@@ -639,7 +677,71 @@ When `AllowCredentials()` is enabled, do not use a wildcard origin. Keep the all
 
 ## Seeding
 
-Seed data is handled through a dedicated module so that initialization logic is not scattered across unrelated persistence code. This makes it easier to add or adjust required default data as the application evolves.
+The seeding mechanism is designed around the **Open/Closed Principle (OCP)**. Each seeder handles a specific entity, while the `DatabaseSeeder` orchestrates execution without depending on concrete seeder implementations.
+
+### Example: Adding a New Seeder
+
+**1. Implement `IDataSeeder`**
+
+For example, a `BrandSeeder` loads brand data from a JSON file and maps each model to a domain entity.
+
+```csharp
+public class BrandSeeder(ApplicationDbContext context)
+    : IDataSeeder
+{
+    public int Order => 1;
+
+    public async Task SeedDataAsync(
+        CancellationToken ct = default)
+        => await JsonSeeder.SeedIfEmpty<
+            ProductBrand, int, ProductBrandSeedModel>(
+                context.Set<ProductBrand>(),
+                "brands.json",
+                model => ProductBrand.Create(model.Name),
+                ct
+            );
+}
+```
+
+**2. Reuse the Generic `JsonSeeder`**
+
+The `JsonSeeder` handles the common logic:
+
+- Reads seed data from JSON files.
+- Skips seeding when the target table already contains data.
+- Deserializes JSON into seed models.
+- Supports both synchronous mapping and asynchronous mapping for operations such as image uploads.
+- Respects `CancellationToken` throughout asynchronous operations.
+
+This keeps data-loading logic separate from entity-specific mapping.
+
+**3. Register the Seeder**
+
+Register the new seeder in the dependency injection container:
+
+```csharp
+services.AddScoped<IDataSeeder, BrandSeeder>();
+```
+
+The `DatabaseSeeder` automatically discovers registered seeders through `IEnumerable<IDataSeeder>`, orders them by their `Order` property, executes them, and saves the changes.
+
+```csharp
+public async Task SeedAsync(
+    CancellationToken ct = default)
+{
+    foreach (var seeder in seeders.OrderBy(s => s.Order))
+    {
+        await seeder.SeedDataAsync(ct);
+        await context.SaveChangesAsync(ct);
+    }
+}
+```
+
+### Why This Design?
+
+Adding a new seeder, such as `ProductTypeSeeder`, `ProductSeeder`, or `DeliveryMethodSeeder`, requires implementing `IDataSeeder` and registering the implementation. The existing orchestration logic does not need to change.
+
+This keeps the seeding mechanism **extensible, reusable, and maintainable**, while allowing execution order to be controlled explicitly when seeders depend on previously seeded data.
 
 ## Cancellation Tokens
 
@@ -707,6 +809,128 @@ Architecture tests are currently in place, and unit-test coverage for individual
 - Rate limiting, IP security, login auditing, and blocked-IP records.
 - Cloudinary media storage and HTML email templates.
 - Encrypted configuration values loaded through a custom provider.
+
+# .NET 9 E-Commerce – Stripe Payment Intents
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'darkMode':true,'background':'#1b1c22','primaryColor':'#2a2b33','primaryTextColor':'#e6e6e6','primaryBorderColor':'#9a9a9a','lineColor':'#d0d0d0','actorBkg':'#2a2b33','actorBorder':'#9a9a9a','actorTextColor':'#e6e6e6','actorLineColor':'#8a8a8a','signalColor':'#e6e6e6','signalTextColor':'#e6e6e6','labelBoxBkgColor':'#2a2b33','labelBoxBorderColor':'#9a9a9a','labelTextColor':'#e6e6e6','loopTextColor':'#e6e6e6','noteBkgColor':'#3d3e45','noteTextColor':'#e6e6e6','noteBorderColor':'#777','activationBkgColor':'#3a3b42','activationBorderColor':'#aaa','sequenceNumberColor':'#111111'}}}%%
+sequenceDiagram
+    autonumber
+    participant C as Client / Browser
+    participant API as Orders and Payments API (L1)
+    participant UC as Application Use Cases (L3)
+    participant PS as IPaymentService / StripePaymentService (L4)
+    participant DB as Database (L5)
+    participant R as Basket Store (Redis)
+    participant S as Stripe API (L6)
+
+    rect rgb(66,68,72)
+    Note over C,S: A) Create Order
+    end
+    C->>API: POST /api/v1/orders {shippingAddressId, deliveryMethodId}
+    activate API
+    API->>UC: CreateOrderCommand
+    activate UC
+    UC->>DB: Load ShippingAddress and DeliveryMethod
+    DB-->>UC: address, deliveryMethod
+    UC->>R: Get customer basket
+    R-->>UC: basket items
+    Note over UC: Validate data and calculate order total on server
+    UC->>DB: Persist Order (Status = Pending)
+    DB-->>UC: orderId
+    UC->>R: Clear customer basket
+    R-->>UC: cleared
+    UC-->>API: orderId, Pending
+    deactivate UC
+    API-->>C: 201 Created {orderId, status: "Pending"}
+    deactivate API
+
+    rect rgb(66,68,72)
+    Note over C,S: B) Create Stripe PaymentIntent
+    end
+    C->>API: POST /api/v1/orders/{orderId}/pay (Authorization: Bearer JWT)
+    activate API
+    API->>UC: CreateOrderPaymentCommand
+    activate UC
+    UC->>DB: Load Order by orderId
+    DB-->>UC: Order or null
+    alt Order not found
+        UC-->>API: NotFound
+        API-->>C: 404 Not Found
+    else Not owned by user or Status is not Pending
+        UC-->>API: Validation / ownership error
+        API-->>C: Error response (e.g. 403 Forbidden / 400 Bad Request)
+    else Valid order (owner and Status = Pending)
+        UC->>PS: CreatePaymentIntentAsync(amount, currency, orderId)
+        activate PS
+        PS->>S: PaymentIntents.Create (Idempotency-Key: payment_intent_order_{orderId})
+        S-->>PS: pi_xxx, clientSecret
+        PS->>PS: UpdatePaymentIntentAsync(pi_xxx, amount, orderId)
+        PS->>S: PaymentIntents.Update(amount)
+        S-->>PS: Updated PaymentIntent
+        PS-->>UC: PaymentIntentResult
+        deactivate PS
+        UC->>DB: Attach PaymentIntentId to Order and SaveChanges
+        DB-->>UC: saved
+        UC-->>API: clientSecret, paymentIntentId
+        API-->>C: 200 OK {clientSecret, publishableKey, paymentIntentId}
+    end
+    deactivate UC
+    deactivate API
+
+    rect rgb(66,68,72)
+    Note over C,S: C) Card entry - browser talks to Stripe only (not via backend)
+    end
+    Note over C: Init Stripe.js with publishableKey
+    C->>S: stripe.confirmCardPayment(clientSecret) (Stripe.js + Elements)
+    alt Authentication required (3D Secure)
+        S-->>C: requires_action (challenge)
+        C->>S: Complete authentication
+    else No additional authentication required
+        Note over S: Stripe proceeds with payment confirmation
+    end
+    S-->>C: Payment result (success / failure / non-final state)
+    Note over C,API: Browser-side result is NOT the source of truth. The backend must rely on the verified Stripe webhook.
+
+    rect rgb(66,68,72)
+    Note over C,S: D) Webhook - source of truth (async, seconds later)
+    end
+    S->>API: POST /api/v1/payments/webhook (raw body, Stripe-Signature header)
+    activate API
+    API->>UC: HandleStripeWebhookCommand(json, signature)
+    activate UC
+    UC->>UC: Verify signature (EventUtility.ConstructEvent with webhook secret)
+    alt Invalid signature or invalid webhook
+        UC-->>API: InvalidWebhook (no order or payment change)
+        API-->>S: 400 Bad Request
+    else Valid signature
+        alt payment_intent.succeeded
+            UC->>DB: Find Order / Payment by PaymentIntentId
+            DB-->>UC: Order
+            opt Event already processed (duplicate)
+                Note over UC: Skip business operation (idempotent)
+                UC-->>API: Success
+                API-->>S: 200 OK
+            end
+            UC->>UC: Order.MarkAsPaid() - Status = Processing, PaidUtc = now
+            UC->>DB: Persist changes and mark event as processed
+            DB-->>UC: saved
+            UC-->>API: Success
+            API-->>S: 200 OK
+        else payment_intent.payment_failed
+            UC->>UC: Record / log payment failure (Order stays Pending)
+            UC-->>API: Handled
+            API-->>S: 200 OK
+        else Other event types
+            Note over UC: Ignore unsupported event safely
+            UC-->>API: Ignored
+            API-->>S: 200 OK
+        end
+    end
+    deactivate UC
+    deactivate API
+    Note over API,DB: Webhook processing is the authoritative mechanism for updating payment and order status. Order: Pending (initial) becomes Processing with PaidUtc set.
+```
 
 ## Deployment
 
