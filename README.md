@@ -36,7 +36,6 @@ The API is deployed on MonsterASP, the SQL Server database is hosted on MonsterA
 - [Architecture Tests](#architecture-tests)
 - [Features Summary](#features-summary)
 - [Deployment](#deployment)
-- [Screenshots Checklist](#screenshots-checklist)
 - [Getting Started](#getting-started)
 - [Links](#links)
 
@@ -939,42 +938,6 @@ sequenceDiagram
 - **Redis:** Upstash
 
 Keep deployment secrets in environment variables or the hosting platform's secret configuration. Do not commit real connection strings, JWT signing keys, Stripe secrets, Cloudinary credentials, SMTP passwords, or encryption keys.
-
-## Screenshots Checklist
-
-Create `docs/images/` in the repository and add screenshots using these suggested filenames.
-
-| Section | Suggested filename |
-|---|---|
-| Overall architecture | `architecture-diagram.png` |
-| Domain dependencies | `domain-dependency-boundaries.png` |
-| Rich Domain Model | `rich-domain-model.png` |
-| CQRS and MediatR | `cqrs-mediatr-diagram.png` |
-| Specification, Builder, Evaluator | `specification-builder-evaluator.png` |
-| Read/Write Repositories | `read-write-repositories.png` |
-| Database ERD | `database-design.png` |
-| Database indexes | `database-indexes.png` |
-| EF Core interceptors, filters, seeding | `efcore-interceptors-filters-seeding.png` |
-| API response structure | `api-response-structure.png` |
-| Result and Problem Details | `result-problem-details.png` |
-| API versioning / Swagger | `api-versioning-swagger.png` |
-| Authentication flow | `authentication-flow.png` |
-| Guest basket and merge | `basket-guest-merge.png` |
-| Caching strategy | `caching-strategy.png` |
-| Order and payment flow | `order-payment-flow.png` |
-| SignalR notifications | `signalr-notifications.png` |
-| Email template and logo | `email-template-logo.png` |
-| Email message builder / attachments | `email-message-builder-attachments.png` |
-| Verification code in Redis | `verification-code-redis.png` |
-| Cloudinary | `cloudinary-integration.png` |
-| IP security middleware | `ip-security-middleware.png` |
-| LoginAudits and BlockedIps | `security-schema-login-audits-blocked-ips.png` |
-| Configuration encryption provider | `configuration-encryption-provider.png` |
-| Serilog UI | `serilog-ui-dashboard.png` |
-| Serilog SQL Server storage | `serilog-sqlserver-logging.png` |
-| CORS | `cors-configuration.png` |
-| Seeding | `seeding-module.png` |
-| Architecture tests | `architecture-tests-xunit.png` |
 
 Use redacted screenshots. Do not expose tokens, verification codes, credentials, customer data, private URLs, or production secrets.
 
