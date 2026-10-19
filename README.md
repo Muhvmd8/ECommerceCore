@@ -4,8 +4,6 @@ A practical e-commerce backend built with **.NET 9, ASP.NET Core, Entity Framewo
 
 The API is deployed on MonsterASP, the SQL Server database is hosted on MonsterASP, and Redis is hosted on Upstash.
 
-> **Screenshots:** Each image slot below points to a suggested file under `docs/images/`. Add your screenshots using those filenames, or update the Markdown paths to match your own files. Until the files exist in the repository, GitHub will show broken-image placeholders.
-
 ## Contents
 
 - [Overview](#overview)
