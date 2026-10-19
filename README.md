@@ -150,7 +150,7 @@ Database structure is designed around the application's main areas, including pr
 
 Indexes are used to support relevant lookup, filtering, and relationship queries. Index choices should follow actual query patterns and be reviewed with generated SQL and execution plans; indexes improve suitable queries but also add write and storage overhead.
 
-# 1) SQl Server Schema
+## 1) SQl Server Schema
 ```mermaid
 erDiagram
     APPLICATIONUSER ||--o{ REFRESHTOKEN : has
@@ -291,7 +291,7 @@ erDiagram
     }
 ```
 
-# 2) Redis
+## 2) Redis
 ```mermaid
 graph TD
     subgraph EmailVerification["Email Verification Module"]
